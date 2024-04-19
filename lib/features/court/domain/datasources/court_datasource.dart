@@ -6,4 +6,6 @@ abstract class CourtDatasource {
   Future<bool> checkCourts();
 
   Future<List<Court>> getCourts();
+
+  Future<Court> getCourtById( String id );
 }

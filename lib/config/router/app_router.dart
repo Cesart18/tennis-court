@@ -10,5 +10,14 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const HomeScreen(),
-      )
+      ),
+      GoRoute(
+          path: '/court/:id',
+          builder: (context, state) {
+            final id = state.pathParameters['id'] ?? 'no-id';
+            print(id);
+            return CourtView(courtId: id);
+
+          },
+          )
   ]);

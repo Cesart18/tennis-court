@@ -40,6 +40,15 @@ class CourtDatasourceImpl extends CourtDatasource{
     return Future.value(courts);
   }
   
+  @override
+  Future<Court> getCourtById(String id) async {
+    final isar = await db;
+    final courtId = int.parse(id);
+    final court = await isar.courts.get(courtId);
+
+    return Future.value(court);
+  }
+  
   
 
  

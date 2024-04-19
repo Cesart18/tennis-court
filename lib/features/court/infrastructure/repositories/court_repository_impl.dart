@@ -24,6 +24,11 @@ class CourtRepositoryImpl extends CourtRepository{
     return datasource.getCourts();
   }
   
+  @override
+  Future<Court> getCourtById(String id) {
+    return datasource.getCourtById(id);
+  }
+  
   
 
 }

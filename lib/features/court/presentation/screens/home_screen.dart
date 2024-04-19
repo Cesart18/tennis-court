@@ -37,22 +37,42 @@ class _HomeScreenView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
     final courts = ref.watch(courtsProvider).courts;
-    return Column(
-      children: [
-        const SizedBox(height: 20,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ...courts.map((court) => CourtCard(courtName: court.name))
-          ],
-        ),
-        const SizedBox(height: 10,),
-         Divider(color: colors.onBackground,),
-        const SizedBox(height: 5,),
-        const Text('Agenda')
-         
-         
-      ],
+    return SafeArea(
+      child: Column(
+        children: [
+          const SizedBox(height: 20,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ...courts.map((court) => CourtCard(court: court,))
+              ],
+            ),
+          ),
+          const SizedBox(height: 10,),
+           Divider(color: colors.onBackground,),
+          const SizedBox(height: 5,),
+          
+        // TODO: agregar la agenda listview
+
+          const Expanded(child: Column(
+            children: [
+              Text('Agenda')
+            ],
+          )),
+      
+      
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: CustomButton(
+                onPressed: (){},
+                text: 'Nueva agenda',
+              ),
+          )
+           
+        ],
+      ),
     );
   }
 }

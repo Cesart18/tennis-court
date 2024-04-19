@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tennis_court/features/court/domain/domain.dart';
 
 class CourtCard extends StatefulWidget {
-  final String courtName;
-  const CourtCard({super.key, required this.courtName});
+final Court court;
+  const CourtCard({super.key, required this.court});
 
   @override
   State<CourtCard> createState() => _CourtCardState();
@@ -16,6 +18,7 @@ class _CourtCardState extends State<CourtCard> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTapUp: (value) {
         setState(() {
@@ -29,6 +32,7 @@ class _CourtCardState extends State<CourtCard> {
           yd = 0;
         });
       },
+      onTap: () => context.push('/court/${widget.court.id}'),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
@@ -51,7 +55,7 @@ class _CourtCardState extends State<CourtCard> {
               color: colors.onBackground
             ),),
             const SizedBox(height: 10,),
-            Text(widget.courtName,
+            Text(widget.court.name,
             style: TextStyle(
               color: colors.onBackground
             ),)

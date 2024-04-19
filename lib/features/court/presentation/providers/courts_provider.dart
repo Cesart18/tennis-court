@@ -3,27 +3,27 @@ import 'package:tennis_court/features/court/domain/domain.dart';
 import 'package:tennis_court/features/court/presentation/providers/court_repository_provider.dart';
 
 
-final courtsProvider = StateNotifierProvider<CourtNotifier, CourtState>((ref) {
+final courtsProvider = StateNotifierProvider<CourtsNotifier, CourtsState>((ref) {
 
     final initCallback = ref.watch(courtRepositoryProvider).initCourtDb;
     final checkCallback = ref.watch(courtRepositoryProvider).checkCourts;
     final getCallback = ref.watch(courtRepositoryProvider).getCourts;
 
-    return CourtNotifier(initCallback: initCallback, checkCallback: checkCallback, getCallback: getCallback);
+    return CourtsNotifier(initCallback: initCallback, checkCallback: checkCallback, getCallback: getCallback);
 
 });
 
 
 
-class CourtNotifier extends StateNotifier<CourtState> {
+class CourtsNotifier extends StateNotifier<CourtsState> {
   final Function() initCallback;
   final Function() checkCallback;
   final Function() getCallback;
-  CourtNotifier({
+  CourtsNotifier({
     required this.initCallback,
     required this.checkCallback,
     required this.getCallback
-  }): super(CourtState()){
+  }): super(CourtsState()){
     initCourtsDb();
   }
   
@@ -40,17 +40,17 @@ class CourtNotifier extends StateNotifier<CourtState> {
 
 }
 
-class CourtState {
+class CourtsState {
 
   final List<Court> courts;
 
-  CourtState({
+  CourtsState({
      this.courts = const []
      });
 
-  CourtState copyWith({
+  CourtsState copyWith({
     List<Court>? courts
-  }) => CourtState(
+  }) => CourtsState(
     courts: courts ?? this.courts
   );
   

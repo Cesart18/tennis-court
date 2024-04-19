@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tennis_court/shared/shared.dart';
+import '../presentation.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -20,6 +21,26 @@ class HomeScreen extends ConsumerWidget {
           ))
         ],
       ),
+      body: const _HomeScreenView(),
+    );
+  }
+}
+
+class _HomeScreenView extends ConsumerWidget {
+  const _HomeScreenView();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final courts = ref.watch(courtsProvider).courts;
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            ...courts.map((court) => CourtCard(courtName: court.name))
+          ],
+        )
+      ],
     );
   }
 }

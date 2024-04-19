@@ -25,6 +25,13 @@ class CourtDatasourceImpl extends CourtDatasource{
   }
 
   @override
+  Future<bool> checkCourts() async {
+   final isar = await db;
+   final hasCourts = await isar.courts.where().isNotEmpty(); 
+   return Future.value(hasCourts);
+  }
+
+  @override
   Future<List<Court>> getCourts() async{
     final isar = await db;
 
@@ -32,6 +39,8 @@ class CourtDatasourceImpl extends CourtDatasource{
 
     return Future.value(courts);
   }
+  
+  
 
  
 

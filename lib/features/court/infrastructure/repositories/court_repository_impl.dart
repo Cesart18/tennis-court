@@ -15,8 +15,15 @@ class CourtRepositoryImpl extends CourtRepository{
   }
 
   @override
+  Future<bool> checkCourts() {
+    return datasource.checkCourts();
+  }
+
+  @override
   Future<List<Court>> getCourts() {
     return datasource.getCourts();
   }
+  
+  
 
 }

@@ -10,8 +10,8 @@ class ScheduleRepositoryImpl extends ScheduleRepository{
   ScheduleRepositoryImpl({ScheduleDatasource? datasource}):datasource = datasource ?? ScheduleDatasourceImpl();
 
   @override
-  Future<void> createSchedule(DateTime date, DateTime time) {
-    return datasource.createSchedule(date, time);
+  Future<void> createSchedule({required DateTime date, required DateTime time, required String userName}) {
+    return datasource.createSchedule(date: date, time: time, userName: userName);
   }
 
   @override

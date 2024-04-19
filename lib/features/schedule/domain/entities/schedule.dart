@@ -14,10 +14,13 @@ class Schedule {
 
   final courts = IsarLinks<Court>();
 
+  final String userName;
 
 
-  Schedule(
-      {required this.date,
+
+  Schedule({
+      required this.date,
       required this.time,
+      required this.userName
       });
 }

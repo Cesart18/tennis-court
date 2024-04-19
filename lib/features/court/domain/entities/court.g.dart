@@ -29,7 +29,15 @@ const CourtSchema = CollectionSchema(
   deserializeProp: _courtDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'schedule': LinkSchema(
+      id: 3020042509647239253,
+      name: r'schedule',
+      target: r'Schedule',
+      single: true,
+      linkName: r'courts',
+    )
+  },
   embeddedSchemas: {},
   getId: _courtGetId,
   getLinks: _courtGetLinks,
@@ -88,10 +96,12 @@ Id _courtGetId(Court object) {
 }
 
 List<IsarLinkBase<dynamic>> _courtGetLinks(Court object) {
-  return [];
+  return [object.schedule];
 }
 
-void _courtAttach(IsarCollection<dynamic> col, Id id, Court object) {}
+void _courtAttach(IsarCollection<dynamic> col, Id id, Court object) {
+  object.schedule.attach(col, col.isar.collection<Schedule>(), r'schedule', id);
+}
 
 extension CourtQueryWhereSort on QueryBuilder<Court, Court, QWhere> {
   QueryBuilder<Court, Court, QAfterWhere> anyId() {
@@ -352,7 +362,20 @@ extension CourtQueryFilter on QueryBuilder<Court, Court, QFilterCondition> {
 
 extension CourtQueryObject on QueryBuilder<Court, Court, QFilterCondition> {}
 
-extension CourtQueryLinks on QueryBuilder<Court, Court, QFilterCondition> {}
+extension CourtQueryLinks on QueryBuilder<Court, Court, QFilterCondition> {
+  QueryBuilder<Court, Court, QAfterFilterCondition> schedule(
+      FilterQuery<Schedule> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'schedule');
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'schedule', 0, true, 0, true);
+    });
+  }
+}
 
 extension CourtQuerySortBy on QueryBuilder<Court, Court, QSortBy> {
   QueryBuilder<Court, Court, QAfterSortBy> sortByName() {

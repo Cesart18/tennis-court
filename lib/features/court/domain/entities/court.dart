@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:tennis_court/features/schedule/domain/domain.dart';
 
 part 'court.g.dart';
 
@@ -8,6 +9,9 @@ class Court {
     final Id id;
 
     final String name;
+
+    @Backlink(to: 'courts')
+    final schedule = IsarLink<Schedule>();
 
   Court({
     required this.id,

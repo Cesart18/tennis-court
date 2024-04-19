@@ -17,18 +17,13 @@ const ScheduleSchema = CollectionSchema(
   name: r'Schedule',
   id: 6369058706800408146,
   properties: {
-    r'courtId': PropertySchema(
-      id: 0,
-      name: r'courtId',
-      type: IsarType.long,
-    ),
     r'date': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'date',
       type: IsarType.dateTime,
     ),
     r'time': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'time',
       type: IsarType.dateTime,
     )
@@ -66,7 +61,14 @@ const ScheduleSchema = CollectionSchema(
       ],
     )
   },
-  links: {},
+  links: {
+    r'courts': LinkSchema(
+      id: -5868905567333681921,
+      name: r'courts',
+      target: r'Court',
+      single: false,
+    )
+  },
   embeddedSchemas: {},
   getId: _scheduleGetId,
   getLinks: _scheduleGetLinks,
@@ -89,9 +91,8 @@ void _scheduleSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.courtId);
-  writer.writeDateTime(offsets[1], object.date);
-  writer.writeDateTime(offsets[2], object.time);
+  writer.writeDateTime(offsets[0], object.date);
+  writer.writeDateTime(offsets[1], object.time);
 }
 
 Schedule _scheduleDeserialize(
@@ -101,9 +102,8 @@ Schedule _scheduleDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Schedule(
-    courtId: reader.readLong(offsets[0]),
-    date: reader.readDateTime(offsets[1]),
-    time: reader.readDateTime(offsets[2]),
+    date: reader.readDateTime(offsets[0]),
+    time: reader.readDateTime(offsets[1]),
   );
   object.id = id;
   return object;
@@ -117,10 +117,8 @@ P _scheduleDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
-    case 1:
       return (reader.readDateTime(offset)) as P;
-    case 2:
+    case 1:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -132,11 +130,12 @@ Id _scheduleGetId(Schedule object) {
 }
 
 List<IsarLinkBase<dynamic>> _scheduleGetLinks(Schedule object) {
-  return [];
+  return [object.courts];
 }
 
 void _scheduleAttach(IsarCollection<dynamic> col, Id id, Schedule object) {
   object.id = id;
+  object.courts.attach(col, col.isar.collection<Court>(), r'courts', id);
 }
 
 extension ScheduleByIndex on IsarCollection<Schedule> {
@@ -466,59 +465,6 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
 
 extension ScheduleQueryFilter
     on QueryBuilder<Schedule, Schedule, QFilterCondition> {
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtIdEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'courtId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtIdGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'courtId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtIdLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'courtId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtIdBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'courtId',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<Schedule, Schedule, QAfterFilterCondition> dateEqualTo(
       DateTime value) {
     return QueryBuilder.apply(this, (query) {
@@ -698,21 +644,66 @@ extension ScheduleQueryObject
     on QueryBuilder<Schedule, Schedule, QFilterCondition> {}
 
 extension ScheduleQueryLinks
-    on QueryBuilder<Schedule, Schedule, QFilterCondition> {}
+    on QueryBuilder<Schedule, Schedule, QFilterCondition> {
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courts(
+      FilterQuery<Court> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'courts');
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'courts', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'courts', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'courts', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'courts', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition>
+      courtsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'courts', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'courts', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension ScheduleQuerySortBy on QueryBuilder<Schedule, Schedule, QSortBy> {
-  QueryBuilder<Schedule, Schedule, QAfterSortBy> sortByCourtId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'courtId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterSortBy> sortByCourtIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'courtId', Sort.desc);
-    });
-  }
-
   QueryBuilder<Schedule, Schedule, QAfterSortBy> sortByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
@@ -740,18 +731,6 @@ extension ScheduleQuerySortBy on QueryBuilder<Schedule, Schedule, QSortBy> {
 
 extension ScheduleQuerySortThenBy
     on QueryBuilder<Schedule, Schedule, QSortThenBy> {
-  QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByCourtId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'courtId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByCourtIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'courtId', Sort.desc);
-    });
-  }
-
   QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
@@ -791,12 +770,6 @@ extension ScheduleQuerySortThenBy
 
 extension ScheduleQueryWhereDistinct
     on QueryBuilder<Schedule, Schedule, QDistinct> {
-  QueryBuilder<Schedule, Schedule, QDistinct> distinctByCourtId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'courtId');
-    });
-  }
-
   QueryBuilder<Schedule, Schedule, QDistinct> distinctByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date');
@@ -815,12 +788,6 @@ extension ScheduleQueryProperty
   QueryBuilder<Schedule, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
-    });
-  }
-
-  QueryBuilder<Schedule, int, QQueryOperations> courtIdProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'courtId');
     });
   }
 

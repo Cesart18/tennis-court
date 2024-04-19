@@ -16,7 +16,8 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       width: double.infinity,
       child: FilledButton(
         onPressed: onPressed,

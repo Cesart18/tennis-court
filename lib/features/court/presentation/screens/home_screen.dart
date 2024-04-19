@@ -63,13 +63,10 @@ class _HomeScreenView extends ConsumerWidget {
           )),
       
       
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: CustomButton(
-                onPressed: (){},
-                text: 'Nueva agenda',
-              ),
-          )
+          CustomButton(
+              onPressed: (){},
+              text: 'Nueva agenda',
+            )
            
         ],
       ),

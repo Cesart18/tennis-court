@@ -15,7 +15,8 @@ class _CourtCardState extends State<CourtCard> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    final colors = Theme.of(context).colorScheme;
+    return GestureDetector(
       onTapUp: (value) {
         setState(() {
           xd = 2;
@@ -30,22 +31,30 @@ class _CourtCardState extends State<CourtCard> {
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(),
+          border: Border.all(
+            color: colors.onBackground
+          ),
           borderRadius: BorderRadius.circular(10),
           boxShadow:  [
              BoxShadow(
-              color: Colors.black,
+              color: colors.onBackground,
               offset: Offset(xd, yd)
              )
           ],
-          color: Colors.white
+          color: colors.background
         ),
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const Text('Cancha:'),
+             Text('Cancha:',
+            style: TextStyle(
+              color: colors.onBackground
+            ),),
             const SizedBox(height: 10,),
-            Text(widget.courtName)
+            Text(widget.courtName,
+            style: TextStyle(
+              color: colors.onBackground
+            ),)
           ],
         ),
       ),

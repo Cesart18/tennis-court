@@ -9,9 +9,13 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = Theme.of(context).colorScheme;
     final isDarkMode = ref.watch(appThemeProvider);
     return Scaffold(
       appBar: AppBar(
+        shadowColor: colors.onBackground,
+        elevation: 1,
+        centerTitle: true,
         title: const Text('Tennis Court'),
         actions: [
           IconButton(onPressed: (){
@@ -31,15 +35,23 @@ class _HomeScreenView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = Theme.of(context).colorScheme;
     final courts = ref.watch(courtsProvider).courts;
     return Column(
       children: [
+        const SizedBox(height: 20,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ...courts.map((court) => CourtCard(courtName: court.name))
           ],
-        )
+        ),
+        const SizedBox(height: 10,),
+         Divider(color: colors.onBackground,),
+        const SizedBox(height: 5,),
+        const Text('Agenda')
+         
+         
       ],
     );
   }

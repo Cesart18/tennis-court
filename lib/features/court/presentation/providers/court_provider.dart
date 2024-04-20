@@ -24,7 +24,6 @@ class CourtNotifier extends StateNotifier<CourtState> {
       required this.scheduleRepository
     }): super(CourtState(id: courtId)){
       loadCourt();
-      loadSchedules();
     }
 
 
@@ -39,7 +38,6 @@ class CourtNotifier extends StateNotifier<CourtState> {
   Future<void> loadSchedules() async {
     await state.court!.schedule.load();
     final schedules = await scheduleRepository.getScheduleByCourt(state.court!.id);
-    print(schedules);
     state = state.copyWith(
       schedules: schedules
     );

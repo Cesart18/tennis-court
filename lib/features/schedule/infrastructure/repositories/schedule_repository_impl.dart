@@ -1,6 +1,7 @@
 
 
-  import 'package:tennis_court/features/schedule/domain/domain.dart';
+  import 'package:tennis_court/features/court/domain/domain.dart';
+import 'package:tennis_court/features/schedule/domain/domain.dart';
 import '../infrastructure.dart';
 
 class ScheduleRepositoryImpl extends ScheduleRepository{
@@ -10,8 +11,8 @@ class ScheduleRepositoryImpl extends ScheduleRepository{
   ScheduleRepositoryImpl({ScheduleDatasource? datasource}):datasource = datasource ?? ScheduleDatasourceImpl();
 
   @override
-  Future<void> createSchedule({required DateTime date, required DateTime time, required String userName}) {
-    return datasource.createSchedule(date: date, time: time, userName: userName);
+  Future<void> createSchedule({ required Schedule schedule, required Court court }) {
+    return datasource.createSchedule(schedule: schedule, court: court);
   }
 
   @override

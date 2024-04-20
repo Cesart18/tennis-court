@@ -1,14 +1,26 @@
 
 
-  import 'package:tennis_court/features/schedule/domain/domain.dart';
+  import 'package:isar/isar.dart';
+import 'package:tennis_court/features/court/domain/entities/court.dart';
+import 'package:tennis_court/features/schedule/domain/domain.dart';
+import 'package:tennis_court/shared/shared.dart';
 
 class ScheduleDatasourceImpl extends ScheduleDatasource{
   
+  late Future<Isar> db;
+  ScheduleDatasourceImpl(){
+    db = IsarService().db;
+  }
 
   @override
-  Future<void> createSchedule({required DateTime date, required DateTime time, required String userName}) {
-    // TODO: implement createSchedule
-    throw UnimplementedError();
+  Future<void> createSchedule({required Schedule schedule, required Court court}) async {
+    final isar = await db;
+    final newSchedule = schedule
+    ..courts.add(court);
+    await isar.writeTxn(() async{
+      await isar.schedules.put(newSchedule);
+      await schedule.courts.save();
+    });
   }
 
   @override
@@ -28,6 +40,8 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
     // TODO: implement loadSchedules
     throw UnimplementedError();
   }
+
+  
   
   
   

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tennis_court/features/schedule/presentation/presentation.dart';
 import 'package:tennis_court/shared/shared.dart';
 import '../presentation.dart';
 
@@ -33,6 +34,13 @@ class HomeScreen extends ConsumerWidget {
 class _HomeScreenView extends ConsumerWidget {
   const _HomeScreenView();
 
+
+  showModal( BuildContext context, Widget widget ){
+    showDialog(
+      context: context,
+       builder: (context) => widget);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
@@ -64,7 +72,7 @@ class _HomeScreenView extends ConsumerWidget {
       
       
           CustomButton(
-              onPressed: (){},
+              onPressed: () => showModal(context, NewScheduleModal()),
               text: 'Nueva agenda',
             )
            

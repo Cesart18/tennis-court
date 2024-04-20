@@ -1,11 +1,12 @@
 
 
+import 'package:tennis_court/features/court/domain/domain.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
 
 
 abstract class ScheduleRepository {
 
-    Future<void> createSchedule({ required DateTime date, required DateTime time, required String userName });
+    Future<void> createSchedule({ required Schedule schedule, required Court court});
 
     Future<void> deleteSchedule( Schedule schedule );
 

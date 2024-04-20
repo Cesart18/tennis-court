@@ -9,5 +9,3 @@ export 'repositories/schedule_repository.dart';
 
 // inputs
 export 'inputs/schedule_user_name.dart';
-export 'inputs/schedule_date.dart';
-export 'inputs/schedule_time.dart';

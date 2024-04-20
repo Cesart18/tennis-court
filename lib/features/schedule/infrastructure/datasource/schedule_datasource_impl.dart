@@ -13,13 +13,14 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
   }
 
   @override
-  Future<void> createSchedule({required Schedule schedule, required Court court}) async {
+  Future<void> createSchedule( Schedule schedule,  Court court) async {
     final isar = await db;
     final newSchedule = schedule
     ..courts.add(court);
     await isar.writeTxn(() async{
       await isar.schedules.put(newSchedule);
       await schedule.courts.save();
+      
     });
   }
 
@@ -30,9 +31,11 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
   }
 
   @override
-  Future<Schedule> getScheduleByCourt(int courtId) {
-    // TODO: implement getScheduleByCourt
-    throw UnimplementedError();
+  Future<List<Schedule>> getScheduleByCourt(int courtId) async {
+    final isar = await db;
+    final schedule = await isar.schedules.filter().courts((q) => q.idEqualTo(courtId))
+    .findAll();
+    return Future.value(schedule);
   }
 
   @override

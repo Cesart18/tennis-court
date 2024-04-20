@@ -35,8 +35,9 @@ class _HomeScreenView extends ConsumerWidget {
   const _HomeScreenView();
 
 
-  showModal( BuildContext context, Widget widget ){
+  _showModal( BuildContext context, Widget widget ){
     showDialog(
+      barrierDismissible: false,
       context: context,
        builder: (context) => widget);
   }
@@ -62,17 +63,16 @@ class _HomeScreenView extends ConsumerWidget {
            Divider(color: colors.onBackground,),
           const SizedBox(height: 5,),
           
-        // TODO: agregar la agenda listview
+        // TODO: Modificar la vista de las agendas 
+              const Text('Agenda'),
 
-          const Expanded(child: Column(
-            children: [
-              Text('Agenda')
-            ],
-          )),
+           Expanded(
+            child: Container()
+          ),
       
       
           CustomButton(
-              onPressed: () => showModal(context, NewScheduleModal()),
+              onPressed: () => _showModal(context, NewScheduleModal(courts: courts,)),
               text: 'Nueva agenda',
             )
            

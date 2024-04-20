@@ -6,13 +6,13 @@ import 'package:tennis_court/features/schedule/domain/domain.dart';
 
 abstract class ScheduleDatasource {
 
-    Future<void> createSchedule({ required Schedule schedule, required Court court});
+    Future<void> createSchedule( Schedule schedule,  Court court );
 
     Future<void> deleteSchedule( Schedule schedule );
 
     Future<List<Schedule>> loadSchedules();
 
-    Future<Schedule> getScheduleByCourt( int courtId );
+    Future<List<Schedule>> getScheduleByCourt( int courtId );
 
 
   }

@@ -11,8 +11,8 @@ class ScheduleRepositoryImpl extends ScheduleRepository{
   ScheduleRepositoryImpl({ScheduleDatasource? datasource}):datasource = datasource ?? ScheduleDatasourceImpl();
 
   @override
-  Future<void> createSchedule({ required Schedule schedule, required Court court }) {
-    return datasource.createSchedule(schedule: schedule, court: court);
+  Future<void> createSchedule(Schedule schedule, Court court ) {
+    return datasource.createSchedule(schedule, court);
   }
 
   @override
@@ -26,7 +26,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository{
   }
 
   @override
-  Future<Schedule> getScheduleByCourt(int courtId) {
+  Future<List<Schedule>> getScheduleByCourt(int courtId) {
     return datasource.getScheduleByCourt(courtId);
   }
 

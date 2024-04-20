@@ -31,28 +31,28 @@ class NewScheduleModalView extends ConsumerWidget {
             length: 20,
              prefixIcon: const Icon(CupertinoIcons.person_crop_circle),
              onChanged: ref.read(scheduleFormProvider.notifier).onUserNameChanged,
+             errorText: scheduleForm.isFormPosted ?  scheduleForm.userName.errorMessage : null,
              ),
           const SizedBox(
             height: 10,
           ),
-          // TODO: agregar los errortext
-
          CustomFormField(
           keyboardType: TextInputType.name,
            labelText: 'Fecha',
             length: 20,
              prefixIcon: const Icon(CupertinoIcons.calendar),
              readOnly: true,
+             errorText:  scheduleForm.isFormPosted ? scheduleForm.date?.errorMessage : null, 
              onTap: () async {
-              final DateTime? pickedDate = await showDatePicker(
+                final DateTime? pickedDate = await showDatePicker(
+                errorFormatText: scheduleForm.date?.errorMessage ,
                 context: context, 
-                initialDate: scheduleForm.date,
-                firstDate: scheduleForm.date,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now(),
                  lastDate: DateTime(2025));
-                 if (pickedDate != null && pickedDate != scheduleForm.date) {
+                 if (pickedDate != null && pickedDate != DateTime.now()) {
                 ref.read(scheduleFormProvider.notifier).onDateChanged(pickedDate);
         }
-
              },
              ),
              
@@ -66,12 +66,12 @@ class NewScheduleModalView extends ConsumerWidget {
             length: 20,
              prefixIcon: const Icon(CupertinoIcons.clock),
              readOnly: true,
+             errorText: scheduleForm.isFormPosted ? scheduleForm.time?.errorMessage : null,
              onTap: () async {
               final TimeOfDay? pickedTime = await showTimePicker(
                 context: context,
-                initialEntryMode: TimePickerEntryMode.inputOnly,
-               initialTime: scheduleForm.time);
-               if( pickedTime != null && pickedTime != scheduleForm.time ){
+               initialTime: TimeOfDay.now());
+               if( pickedTime != null && pickedTime != TimeOfDay.now() ){
                 ref.read(scheduleFormProvider.notifier).onTimeChanged(pickedTime);
                }
              },

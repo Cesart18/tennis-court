@@ -25,7 +25,7 @@ const ScheduleSchema = CollectionSchema(
     r'time': PropertySchema(
       id: 1,
       name: r'time',
-      type: IsarType.long,
+      type: IsarType.string,
     ),
     r'userName': PropertySchema(
       id: 2,
@@ -60,8 +60,8 @@ const ScheduleSchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'time',
-          type: IndexType.value,
-          caseSensitive: false,
+          type: IndexType.hash,
+          caseSensitive: true,
         )
       ],
     )
@@ -87,6 +87,7 @@ int _scheduleEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.time.length * 3;
   bytesCount += 3 + object.userName.length * 3;
   return bytesCount;
 }
@@ -98,7 +99,7 @@ void _scheduleSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.date);
-  writer.writeLong(offsets[1], object.time);
+  writer.writeString(offsets[1], object.time);
   writer.writeString(offsets[2], object.userName);
 }
 
@@ -110,7 +111,7 @@ Schedule _scheduleDeserialize(
 ) {
   final object = Schedule(
     date: reader.readDateTime(offsets[0]),
-    time: reader.readLong(offsets[1]),
+    time: reader.readString(offsets[1]),
     userName: reader.readString(offsets[2]),
   );
   object.id = id;
@@ -127,7 +128,7 @@ P _scheduleDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     default:
@@ -149,38 +150,38 @@ void _scheduleAttach(IsarCollection<dynamic> col, Id id, Schedule object) {
 }
 
 extension ScheduleByIndex on IsarCollection<Schedule> {
-  Future<Schedule?> getByTime(int time) {
+  Future<Schedule?> getByTime(String time) {
     return getByIndex(r'time', [time]);
   }
 
-  Schedule? getByTimeSync(int time) {
+  Schedule? getByTimeSync(String time) {
     return getByIndexSync(r'time', [time]);
   }
 
-  Future<bool> deleteByTime(int time) {
+  Future<bool> deleteByTime(String time) {
     return deleteByIndex(r'time', [time]);
   }
 
-  bool deleteByTimeSync(int time) {
+  bool deleteByTimeSync(String time) {
     return deleteByIndexSync(r'time', [time]);
   }
 
-  Future<List<Schedule?>> getAllByTime(List<int> timeValues) {
+  Future<List<Schedule?>> getAllByTime(List<String> timeValues) {
     final values = timeValues.map((e) => [e]).toList();
     return getAllByIndex(r'time', values);
   }
 
-  List<Schedule?> getAllByTimeSync(List<int> timeValues) {
+  List<Schedule?> getAllByTimeSync(List<String> timeValues) {
     final values = timeValues.map((e) => [e]).toList();
     return getAllByIndexSync(r'time', values);
   }
 
-  Future<int> deleteAllByTime(List<int> timeValues) {
+  Future<int> deleteAllByTime(List<String> timeValues) {
     final values = timeValues.map((e) => [e]).toList();
     return deleteAllByIndex(r'time', values);
   }
 
-  int deleteAllByTimeSync(List<int> timeValues) {
+  int deleteAllByTimeSync(List<String> timeValues) {
     final values = timeValues.map((e) => [e]).toList();
     return deleteAllByIndexSync(r'time', values);
   }
@@ -213,14 +214,6 @@ extension ScheduleQueryWhereSort on QueryBuilder<Schedule, Schedule, QWhere> {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'date'),
-      );
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhere> anyTime() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'time'),
       );
     });
   }
@@ -382,7 +375,7 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeEqualTo(int time) {
+  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeEqualTo(String time) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'time',
@@ -391,7 +384,8 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeNotEqualTo(int time) {
+  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeNotEqualTo(
+      String time) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -422,51 +416,6 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
               includeUpper: false,
             ));
       }
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeGreaterThan(
-    int time, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'time',
-        lower: [time],
-        includeLower: include,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeLessThan(
-    int time, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'time',
-        lower: [],
-        upper: [time],
-        includeUpper: include,
-      ));
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeBetween(
-    int lowerTime,
-    int upperTime, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'time',
-        lower: [lowerTime],
-        includeLower: includeLower,
-        upper: [upperTime],
-        includeUpper: includeUpper,
-      ));
     });
   }
 }
@@ -595,46 +544,54 @@ extension ScheduleQueryFilter
   }
 
   QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeEqualTo(
-      int value) {
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'time',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeGreaterThan(
-    int value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'time',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeLessThan(
-    int value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'time',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeBetween(
-    int lower,
-    int upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -643,6 +600,75 @@ extension ScheduleQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'time',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'time',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'time',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'time',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'time',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'time',
+        value: '',
       ));
     });
   }
@@ -938,9 +964,10 @@ extension ScheduleQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QDistinct> distinctByTime() {
+  QueryBuilder<Schedule, Schedule, QDistinct> distinctByTime(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'time');
+      return query.addDistinctBy(r'time', caseSensitive: caseSensitive);
     });
   }
 
@@ -966,7 +993,7 @@ extension ScheduleQueryProperty
     });
   }
 
-  QueryBuilder<Schedule, int, QQueryOperations> timeProperty() {
+  QueryBuilder<Schedule, String, QQueryOperations> timeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'time');
     });

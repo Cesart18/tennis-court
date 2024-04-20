@@ -34,30 +34,3 @@ class CustomDropDownMenuButton extends ConsumerWidget {
       );
   }
 }
-
-
-
-/* 
-
-DropdownButtonFormField<Court>(
-      
-      decoration: InputDecoration(
-          prefixIcon: const Icon(
-            Icons.sports_tennis_sharp,
-            size: 20,
-          ),
-          border: border,
-          enabledBorder: border,
-          focusedBorder: border),
-      borderRadius: BorderRadius.circular(4),
-      isDense: true,
-      value: selectedIndex,
-      items: courts.map((court) {
-        return DropdownMenuItem<Court>(
-            value: court, child: Text('Cancha: ${court.name}'));
-      }).toList(),
-      onChanged: (value) {
-        selectedIndex = value!;
-      },
-    );
- */

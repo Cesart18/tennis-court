@@ -10,7 +10,7 @@ class Schedule {
   @Index()
   final DateTime date;
   @Index(unique: true)
-  final DateTime time;
+  final int time;
 
   final courts = IsarLinks<Court>();
 

@@ -34,7 +34,7 @@ const CourtSchema = CollectionSchema(
       id: 3020042509647239253,
       name: r'schedule',
       target: r'Schedule',
-      single: true,
+      single: false,
       linkName: r'courts',
     )
   },
@@ -370,9 +370,52 @@ extension CourtQueryLinks on QueryBuilder<Court, Court, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleIsNull() {
+  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'schedule', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'schedule', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'schedule', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'schedule', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'schedule', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'schedule', lower, includeLower, upper, includeUpper);
     });
   }
 }

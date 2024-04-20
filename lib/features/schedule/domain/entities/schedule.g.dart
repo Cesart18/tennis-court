@@ -25,7 +25,7 @@ const ScheduleSchema = CollectionSchema(
     r'time': PropertySchema(
       id: 1,
       name: r'time',
-      type: IsarType.dateTime,
+      type: IsarType.long,
     ),
     r'userName': PropertySchema(
       id: 2,
@@ -98,7 +98,7 @@ void _scheduleSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.date);
-  writer.writeDateTime(offsets[1], object.time);
+  writer.writeLong(offsets[1], object.time);
   writer.writeString(offsets[2], object.userName);
 }
 
@@ -110,7 +110,7 @@ Schedule _scheduleDeserialize(
 ) {
   final object = Schedule(
     date: reader.readDateTime(offsets[0]),
-    time: reader.readDateTime(offsets[1]),
+    time: reader.readLong(offsets[1]),
     userName: reader.readString(offsets[2]),
   );
   object.id = id;
@@ -127,7 +127,7 @@ P _scheduleDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     default:
@@ -149,38 +149,38 @@ void _scheduleAttach(IsarCollection<dynamic> col, Id id, Schedule object) {
 }
 
 extension ScheduleByIndex on IsarCollection<Schedule> {
-  Future<Schedule?> getByTime(DateTime time) {
+  Future<Schedule?> getByTime(int time) {
     return getByIndex(r'time', [time]);
   }
 
-  Schedule? getByTimeSync(DateTime time) {
+  Schedule? getByTimeSync(int time) {
     return getByIndexSync(r'time', [time]);
   }
 
-  Future<bool> deleteByTime(DateTime time) {
+  Future<bool> deleteByTime(int time) {
     return deleteByIndex(r'time', [time]);
   }
 
-  bool deleteByTimeSync(DateTime time) {
+  bool deleteByTimeSync(int time) {
     return deleteByIndexSync(r'time', [time]);
   }
 
-  Future<List<Schedule?>> getAllByTime(List<DateTime> timeValues) {
+  Future<List<Schedule?>> getAllByTime(List<int> timeValues) {
     final values = timeValues.map((e) => [e]).toList();
     return getAllByIndex(r'time', values);
   }
 
-  List<Schedule?> getAllByTimeSync(List<DateTime> timeValues) {
+  List<Schedule?> getAllByTimeSync(List<int> timeValues) {
     final values = timeValues.map((e) => [e]).toList();
     return getAllByIndexSync(r'time', values);
   }
 
-  Future<int> deleteAllByTime(List<DateTime> timeValues) {
+  Future<int> deleteAllByTime(List<int> timeValues) {
     final values = timeValues.map((e) => [e]).toList();
     return deleteAllByIndex(r'time', values);
   }
 
-  int deleteAllByTimeSync(List<DateTime> timeValues) {
+  int deleteAllByTimeSync(List<int> timeValues) {
     final values = timeValues.map((e) => [e]).toList();
     return deleteAllByIndexSync(r'time', values);
   }
@@ -382,8 +382,7 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeEqualTo(
-      DateTime time) {
+  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeEqualTo(int time) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'time',
@@ -392,8 +391,7 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeNotEqualTo(
-      DateTime time) {
+  QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeNotEqualTo(int time) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -428,7 +426,7 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
   }
 
   QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeGreaterThan(
-    DateTime time, {
+    int time, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -442,7 +440,7 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
   }
 
   QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeLessThan(
-    DateTime time, {
+    int time, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -456,8 +454,8 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
   }
 
   QueryBuilder<Schedule, Schedule, QAfterWhereClause> timeBetween(
-    DateTime lowerTime,
-    DateTime upperTime, {
+    int lowerTime,
+    int upperTime, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -597,7 +595,7 @@ extension ScheduleQueryFilter
   }
 
   QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeEqualTo(
-      DateTime value) {
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'time',
@@ -607,7 +605,7 @@ extension ScheduleQueryFilter
   }
 
   QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeGreaterThan(
-    DateTime value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -620,7 +618,7 @@ extension ScheduleQueryFilter
   }
 
   QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeLessThan(
-    DateTime value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -633,8 +631,8 @@ extension ScheduleQueryFilter
   }
 
   QueryBuilder<Schedule, Schedule, QAfterFilterCondition> timeBetween(
-    DateTime lower,
-    DateTime upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -968,7 +966,7 @@ extension ScheduleQueryProperty
     });
   }
 
-  QueryBuilder<Schedule, DateTime, QQueryOperations> timeProperty() {
+  QueryBuilder<Schedule, int, QQueryOperations> timeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'time');
     });

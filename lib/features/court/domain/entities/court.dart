@@ -11,7 +11,7 @@ class Court {
     final String name;
 
     @Backlink(to: 'courts')
-    final schedule = IsarLink<Schedule>();
+    final schedule = IsarLinks<Schedule>();
 
   Court({
     required this.id,

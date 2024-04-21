@@ -40,7 +40,6 @@ class ScheduleListView extends ConsumerWidget {
       itemCount: schedules?.length,
       itemBuilder: (context, index) {
         final schedule = schedules![index];
-
         return Container(
           decoration: BoxDecoration(
             border: Border.all(
@@ -66,9 +65,9 @@ class ScheduleListView extends ConsumerWidget {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Fecha: ${DateFormat('EEEE dd-MM').format(schedule.date)}'),
-                Text('Hora: ${DateFormat('hh:mm a').format(schedule.date)}'),
-
+                Text('Fecha: ${DateFormat('EEEE dd-MM').format(schedule.initialDate)}'),
+                Text('Hora inicial: ${DateFormat('hh:mm a').format(schedule.initialDate)}'),
+                Text('Hora de salida:  ${DateFormat('hh:mm a').format(schedule.endDate)}')
               ],
             ),
           ),
@@ -78,3 +77,8 @@ class ScheduleListView extends ConsumerWidget {
       );
   }
 }
+
+/* 
+
+
+ */

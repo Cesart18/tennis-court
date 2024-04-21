@@ -7,9 +7,11 @@ part 'schedule.g.dart';
 class Schedule {
   Id? id;
 
-  @Index(unique: true)
-  final DateTime date;
 
+  final DateTime initialDate;
+  final DateTime endDate;
+
+  @Backlink(to: 'schedules')
   final courts = IsarLinks<Court>();
 
   final String userName;
@@ -17,7 +19,8 @@ class Schedule {
 
 
   Schedule({
-      required this.date,
-      required this.userName
+      required this.initialDate,
+      required this.userName,
+      required this.endDate
       });
 }

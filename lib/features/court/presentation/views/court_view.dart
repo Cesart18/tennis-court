@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tennis_court/features/court/presentation/providers/court_provider.dart';
 import 'package:tennis_court/features/schedule/presentation/presentation.dart';
 import 'package:tennis_court/shared/shared.dart';
-import 'package:tennis_court/shared/widgets/custom_button.dart';
 
 class CourtView extends ConsumerWidget {
   final String courtId;

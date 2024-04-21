@@ -17,13 +17,18 @@ const ScheduleSchema = CollectionSchema(
   name: r'Schedule',
   id: 6369058706800408146,
   properties: {
-    r'date': PropertySchema(
+    r'endDate': PropertySchema(
       id: 0,
-      name: r'date',
+      name: r'endDate',
+      type: IsarType.dateTime,
+    ),
+    r'initialDate': PropertySchema(
+      id: 1,
+      name: r'initialDate',
       type: IsarType.dateTime,
     ),
     r'userName': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'userName',
       type: IsarType.string,
     )
@@ -33,27 +38,14 @@ const ScheduleSchema = CollectionSchema(
   deserialize: _scheduleDeserialize,
   deserializeProp: _scheduleDeserializeProp,
   idName: r'id',
-  indexes: {
-    r'date': IndexSchema(
-      id: -7552997827385218417,
-      name: r'date',
-      unique: true,
-      replace: false,
-      properties: [
-        IndexPropertySchema(
-          name: r'date',
-          type: IndexType.value,
-          caseSensitive: false,
-        )
-      ],
-    )
-  },
+  indexes: {},
   links: {
     r'courts': LinkSchema(
-      id: -5868905567333681921,
+      id: -8783338300362110384,
       name: r'courts',
       target: r'Court',
       single: false,
+      linkName: r'schedules',
     )
   },
   embeddedSchemas: {},
@@ -79,8 +71,9 @@ void _scheduleSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.date);
-  writer.writeString(offsets[1], object.userName);
+  writer.writeDateTime(offsets[0], object.endDate);
+  writer.writeDateTime(offsets[1], object.initialDate);
+  writer.writeString(offsets[2], object.userName);
 }
 
 Schedule _scheduleDeserialize(
@@ -90,8 +83,9 @@ Schedule _scheduleDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Schedule(
-    date: reader.readDateTime(offsets[0]),
-    userName: reader.readString(offsets[1]),
+    endDate: reader.readDateTime(offsets[0]),
+    initialDate: reader.readDateTime(offsets[1]),
+    userName: reader.readString(offsets[2]),
   );
   object.id = id;
   return object;
@@ -107,6 +101,8 @@ P _scheduleDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
+      return (reader.readDateTime(offset)) as P;
+    case 2:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -126,72 +122,10 @@ void _scheduleAttach(IsarCollection<dynamic> col, Id id, Schedule object) {
   object.courts.attach(col, col.isar.collection<Court>(), r'courts', id);
 }
 
-extension ScheduleByIndex on IsarCollection<Schedule> {
-  Future<Schedule?> getByDate(DateTime date) {
-    return getByIndex(r'date', [date]);
-  }
-
-  Schedule? getByDateSync(DateTime date) {
-    return getByIndexSync(r'date', [date]);
-  }
-
-  Future<bool> deleteByDate(DateTime date) {
-    return deleteByIndex(r'date', [date]);
-  }
-
-  bool deleteByDateSync(DateTime date) {
-    return deleteByIndexSync(r'date', [date]);
-  }
-
-  Future<List<Schedule?>> getAllByDate(List<DateTime> dateValues) {
-    final values = dateValues.map((e) => [e]).toList();
-    return getAllByIndex(r'date', values);
-  }
-
-  List<Schedule?> getAllByDateSync(List<DateTime> dateValues) {
-    final values = dateValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'date', values);
-  }
-
-  Future<int> deleteAllByDate(List<DateTime> dateValues) {
-    final values = dateValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'date', values);
-  }
-
-  int deleteAllByDateSync(List<DateTime> dateValues) {
-    final values = dateValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'date', values);
-  }
-
-  Future<Id> putByDate(Schedule object) {
-    return putByIndex(r'date', object);
-  }
-
-  Id putByDateSync(Schedule object, {bool saveLinks = true}) {
-    return putByIndexSync(r'date', object, saveLinks: saveLinks);
-  }
-
-  Future<List<Id>> putAllByDate(List<Schedule> objects) {
-    return putAllByIndex(r'date', objects);
-  }
-
-  List<Id> putAllByDateSync(List<Schedule> objects, {bool saveLinks = true}) {
-    return putAllByIndexSync(r'date', objects, saveLinks: saveLinks);
-  }
-}
-
 extension ScheduleQueryWhereSort on QueryBuilder<Schedule, Schedule, QWhere> {
   QueryBuilder<Schedule, Schedule, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhere> anyDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'date'),
-      );
     });
   }
 }
@@ -261,137 +195,47 @@ extension ScheduleQueryWhere on QueryBuilder<Schedule, Schedule, QWhereClause> {
       ));
     });
   }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> dateEqualTo(
-      DateTime date) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'date',
-        value: [date],
-      ));
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> dateNotEqualTo(
-      DateTime date) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [],
-              upper: [date],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [date],
-              includeLower: false,
-              upper: [],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [date],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [],
-              upper: [date],
-              includeUpper: false,
-            ));
-      }
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> dateGreaterThan(
-    DateTime date, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'date',
-        lower: [date],
-        includeLower: include,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> dateLessThan(
-    DateTime date, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'date',
-        lower: [],
-        upper: [date],
-        includeUpper: include,
-      ));
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterWhereClause> dateBetween(
-    DateTime lowerDate,
-    DateTime upperDate, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'date',
-        lower: [lowerDate],
-        includeLower: includeLower,
-        upper: [upperDate],
-        includeUpper: includeUpper,
-      ));
-    });
-  }
 }
 
 extension ScheduleQueryFilter
     on QueryBuilder<Schedule, Schedule, QFilterCondition> {
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> dateEqualTo(
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> endDateEqualTo(
       DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'date',
+        property: r'endDate',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> dateGreaterThan(
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> endDateGreaterThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'date',
+        property: r'endDate',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> dateLessThan(
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> endDateLessThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'date',
+        property: r'endDate',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> dateBetween(
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> endDateBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
@@ -399,7 +243,7 @@ extension ScheduleQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'date',
+        property: r'endDate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -468,6 +312,60 @@ extension ScheduleQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> initialDateEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'initialDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition>
+      initialDateGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'initialDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> initialDateLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'initialDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> initialDateBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'initialDate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -671,15 +569,27 @@ extension ScheduleQueryLinks
 }
 
 extension ScheduleQuerySortBy on QueryBuilder<Schedule, Schedule, QSortBy> {
-  QueryBuilder<Schedule, Schedule, QAfterSortBy> sortByDate() {
+  QueryBuilder<Schedule, Schedule, QAfterSortBy> sortByEndDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'date', Sort.asc);
+      return query.addSortBy(r'endDate', Sort.asc);
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterSortBy> sortByDateDesc() {
+  QueryBuilder<Schedule, Schedule, QAfterSortBy> sortByEndDateDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'date', Sort.desc);
+      return query.addSortBy(r'endDate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterSortBy> sortByInitialDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'initialDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterSortBy> sortByInitialDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'initialDate', Sort.desc);
     });
   }
 
@@ -698,15 +608,15 @@ extension ScheduleQuerySortBy on QueryBuilder<Schedule, Schedule, QSortBy> {
 
 extension ScheduleQuerySortThenBy
     on QueryBuilder<Schedule, Schedule, QSortThenBy> {
-  QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByDate() {
+  QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByEndDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'date', Sort.asc);
+      return query.addSortBy(r'endDate', Sort.asc);
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByDateDesc() {
+  QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByEndDateDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'date', Sort.desc);
+      return query.addSortBy(r'endDate', Sort.desc);
     });
   }
 
@@ -719,6 +629,18 @@ extension ScheduleQuerySortThenBy
   QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByInitialDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'initialDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QAfterSortBy> thenByInitialDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'initialDate', Sort.desc);
     });
   }
 
@@ -737,9 +659,15 @@ extension ScheduleQuerySortThenBy
 
 extension ScheduleQueryWhereDistinct
     on QueryBuilder<Schedule, Schedule, QDistinct> {
-  QueryBuilder<Schedule, Schedule, QDistinct> distinctByDate() {
+  QueryBuilder<Schedule, Schedule, QDistinct> distinctByEndDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'date');
+      return query.addDistinctBy(r'endDate');
+    });
+  }
+
+  QueryBuilder<Schedule, Schedule, QDistinct> distinctByInitialDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'initialDate');
     });
   }
 
@@ -759,9 +687,15 @@ extension ScheduleQueryProperty
     });
   }
 
-  QueryBuilder<Schedule, DateTime, QQueryOperations> dateProperty() {
+  QueryBuilder<Schedule, DateTime, QQueryOperations> endDateProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'date');
+      return query.addPropertyName(r'endDate');
+    });
+  }
+
+  QueryBuilder<Schedule, DateTime, QQueryOperations> initialDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'initialDate');
     });
   }
 

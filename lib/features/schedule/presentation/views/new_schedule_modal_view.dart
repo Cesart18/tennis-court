@@ -28,7 +28,7 @@ class NewScheduleModalView extends ConsumerWidget {
 
     return SizedBox(
       width: 320,
-      height: 400,
+      height: 450,
       child: Column(
         children: [
           Text(
@@ -79,13 +79,13 @@ class NewScheduleModalView extends ConsumerWidget {
             length: 20,
              prefixIcon: const Icon(CupertinoIcons.clock),
              readOnly: true,
-             errorText: scheduleForm.isFormPosted ? scheduleForm.time.errorMessage : null,
+             errorText: scheduleForm.isFormPosted ? scheduleForm.initialTime.errorMessage : null,
              onTap: () async {
               final TimeOfDay? pickedTime = await showTimePicker(
                 context: context,
                initialTime: TimeOfDay.now());
                if( pickedTime != null && pickedTime != TimeOfDay.now() ){
-                ref.read(scheduleFormProvider.notifier).onTimeChanged(pickedTime);
+                ref.read(scheduleFormProvider.notifier).onInitialTimeChanged(pickedTime);
                }
              },
              ),
@@ -95,9 +95,15 @@ class NewScheduleModalView extends ConsumerWidget {
             height: 10,
           ),
 
+        const TimeDropDownMenuButton(),
+
+          const SizedBox(
+            height: 10,
+          ),
 
 
-          CustomDropDownMenuButton(
+
+          CourtsDropDownMenuButton(
             courts: courts,
           ),
           

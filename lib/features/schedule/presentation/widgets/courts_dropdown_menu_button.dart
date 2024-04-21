@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tennis_court/features/court/domain/domain.dart';
 import 'package:tennis_court/features/schedule/presentation/presentation.dart';
 
-class CustomDropDownMenuButton extends ConsumerWidget {
+class CourtsDropDownMenuButton extends ConsumerWidget {
   final List<Court> courts;
-  const CustomDropDownMenuButton({super.key, required this.courts});
+  const CourtsDropDownMenuButton({super.key, required this.courts});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

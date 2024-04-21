@@ -2,9 +2,9 @@
 
 import 'package:formz/formz.dart';
 
-enum ScheduleDateError { invalid }
+enum ScheduleInitialDateError { invalid }
 
-class ScheduleDate extends FormzInput <DateTime?, ScheduleDateError> {
+class ScheduleDate extends FormzInput <DateTime?, ScheduleInitialDateError> {
 
    ScheduleDate.pure() : super.pure(DateTime.now());
   const ScheduleDate.dirty(super.value) : super.dirty();
@@ -14,15 +14,15 @@ class ScheduleDate extends FormzInput <DateTime?, ScheduleDateError> {
   String? get errorMessage {
     if( isValid || isPure ) return null;
 
-  if ( displayError == ScheduleDateError.invalid ) return 'Fecha es requerida';
+  if ( displayError == ScheduleInitialDateError.invalid ) return 'Fecha es requerida';
 
   return null;
   }
 
 
   @override
-  ScheduleDateError? validator(DateTime? value) {
-    if( value == null ) return ScheduleDateError.invalid;
+  ScheduleInitialDateError? validator(DateTime? value) {
+    if( value == null ) return ScheduleInitialDateError.invalid;
     return null;
   }
 

@@ -10,8 +10,8 @@ class Court {
 
     final String name;
 
-    @Backlink(to: 'courts')
-    final schedule = IsarLinks<Schedule>();
+    @Index(unique: true)
+    final schedules = IsarLinks<Schedule>();
 
   Court({
     required this.id,

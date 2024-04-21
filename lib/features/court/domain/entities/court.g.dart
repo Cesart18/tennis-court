@@ -30,12 +30,11 @@ const CourtSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'schedule': LinkSchema(
-      id: 3020042509647239253,
-      name: r'schedule',
+    r'schedules': LinkSchema(
+      id: -8103724098656530323,
+      name: r'schedules',
       target: r'Schedule',
       single: false,
-      linkName: r'courts',
     )
   },
   embeddedSchemas: {},
@@ -96,11 +95,12 @@ Id _courtGetId(Court object) {
 }
 
 List<IsarLinkBase<dynamic>> _courtGetLinks(Court object) {
-  return [object.schedule];
+  return [object.schedules];
 }
 
 void _courtAttach(IsarCollection<dynamic> col, Id id, Court object) {
-  object.schedule.attach(col, col.isar.collection<Schedule>(), r'schedule', id);
+  object.schedules
+      .attach(col, col.isar.collection<Schedule>(), r'schedules', id);
 }
 
 extension CourtQueryWhereSort on QueryBuilder<Court, Court, QWhere> {
@@ -363,51 +363,51 @@ extension CourtQueryFilter on QueryBuilder<Court, Court, QFilterCondition> {
 extension CourtQueryObject on QueryBuilder<Court, Court, QFilterCondition> {}
 
 extension CourtQueryLinks on QueryBuilder<Court, Court, QFilterCondition> {
-  QueryBuilder<Court, Court, QAfterFilterCondition> schedule(
+  QueryBuilder<Court, Court, QAfterFilterCondition> schedules(
       FilterQuery<Schedule> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'schedule');
+      return query.link(q, r'schedules');
     });
   }
 
-  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleLengthEqualTo(
+  QueryBuilder<Court, Court, QAfterFilterCondition> schedulesLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'schedule', length, true, length, true);
+      return query.linkLength(r'schedules', length, true, length, true);
     });
   }
 
-  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleIsEmpty() {
+  QueryBuilder<Court, Court, QAfterFilterCondition> schedulesIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'schedule', 0, true, 0, true);
+      return query.linkLength(r'schedules', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleIsNotEmpty() {
+  QueryBuilder<Court, Court, QAfterFilterCondition> schedulesIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'schedule', 0, false, 999999, true);
+      return query.linkLength(r'schedules', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleLengthLessThan(
+  QueryBuilder<Court, Court, QAfterFilterCondition> schedulesLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'schedule', 0, true, length, include);
+      return query.linkLength(r'schedules', 0, true, length, include);
     });
   }
 
-  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleLengthGreaterThan(
+  QueryBuilder<Court, Court, QAfterFilterCondition> schedulesLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'schedule', length, include, 999999, true);
+      return query.linkLength(r'schedules', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<Court, Court, QAfterFilterCondition> scheduleLengthBetween(
+  QueryBuilder<Court, Court, QAfterFilterCondition> schedulesLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -415,7 +415,7 @@ extension CourtQueryLinks on QueryBuilder<Court, Court, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'schedule', lower, includeLower, upper, includeUpper);
+          r'schedules', lower, includeLower, upper, includeUpper);
     });
   }
 }

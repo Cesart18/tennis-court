@@ -5,7 +5,7 @@
 List<Schedule> sortSchedulesByDate( List<Schedule> schedules ){
 
   List<Schedule> sortedSchedules = [...schedules];
-  sortedSchedules.sort((a, b) => a.date.compareTo(b.date),);
+  sortedSchedules.sort((a, b) => a.initialDate.compareTo(b.initialDate),);
 
   return sortedSchedules;
 

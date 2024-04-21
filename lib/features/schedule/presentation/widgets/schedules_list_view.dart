@@ -42,6 +42,12 @@ class ScheduleListView extends ConsumerWidget {
         final schedule = schedules![index];
 
         return Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: colors.onBackground
+            ),
+            borderRadius: BorderRadius.circular(4)
+          ),
           margin: const EdgeInsets.symmetric(vertical: 5),
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -51,10 +57,6 @@ class ScheduleListView extends ConsumerWidget {
                 context.pop();
               });
             }, icon: const Icon(CupertinoIcons.trash_fill,)),
-            shape: BeveledRectangleBorder(
-              borderRadius: BorderRadius.circular(2),
-              side:  BorderSide(width: .5, color: colors.onBackground)
-            ),
             title: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Cancha: ${schedule.courts.first.name}'),

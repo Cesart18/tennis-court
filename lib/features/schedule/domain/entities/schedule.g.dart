@@ -37,7 +37,7 @@ const ScheduleSchema = CollectionSchema(
     r'date': IndexSchema(
       id: -7552997827385218417,
       name: r'date',
-      unique: false,
+      unique: true,
       replace: false,
       properties: [
         IndexPropertySchema(
@@ -124,6 +124,60 @@ List<IsarLinkBase<dynamic>> _scheduleGetLinks(Schedule object) {
 void _scheduleAttach(IsarCollection<dynamic> col, Id id, Schedule object) {
   object.id = id;
   object.courts.attach(col, col.isar.collection<Court>(), r'courts', id);
+}
+
+extension ScheduleByIndex on IsarCollection<Schedule> {
+  Future<Schedule?> getByDate(DateTime date) {
+    return getByIndex(r'date', [date]);
+  }
+
+  Schedule? getByDateSync(DateTime date) {
+    return getByIndexSync(r'date', [date]);
+  }
+
+  Future<bool> deleteByDate(DateTime date) {
+    return deleteByIndex(r'date', [date]);
+  }
+
+  bool deleteByDateSync(DateTime date) {
+    return deleteByIndexSync(r'date', [date]);
+  }
+
+  Future<List<Schedule?>> getAllByDate(List<DateTime> dateValues) {
+    final values = dateValues.map((e) => [e]).toList();
+    return getAllByIndex(r'date', values);
+  }
+
+  List<Schedule?> getAllByDateSync(List<DateTime> dateValues) {
+    final values = dateValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'date', values);
+  }
+
+  Future<int> deleteAllByDate(List<DateTime> dateValues) {
+    final values = dateValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'date', values);
+  }
+
+  int deleteAllByDateSync(List<DateTime> dateValues) {
+    final values = dateValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'date', values);
+  }
+
+  Future<Id> putByDate(Schedule object) {
+    return putByIndex(r'date', object);
+  }
+
+  Id putByDateSync(Schedule object, {bool saveLinks = true}) {
+    return putByIndexSync(r'date', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByDate(List<Schedule> objects) {
+    return putAllByIndex(r'date', objects);
+  }
+
+  List<Id> putAllByDateSync(List<Schedule> objects, {bool saveLinks = true}) {
+    return putAllByIndexSync(r'date', objects, saveLinks: saveLinks);
+  }
 }
 
 extension ScheduleQueryWhereSort on QueryBuilder<Schedule, Schedule, QWhere> {

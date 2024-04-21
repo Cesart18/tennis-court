@@ -9,11 +9,23 @@ class NewScheduleModalView extends ConsumerWidget {
   final List<Court> courts;
   const NewScheduleModalView({super.key, required this.courts});
 
+  void showSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).textTheme;
     final scheduleForm = ref.watch(scheduleFormProvider);
+
+    ref.listen(schedulesProvider, (previous, next) {
+      if (next.errorMessage.isEmpty) return;
+    Future.delayed(const Duration(milliseconds: 100));
+      showSnackbar(context, next.errorMessage);
+    });
+
     return SizedBox(
       width: 320,
       height: 400,

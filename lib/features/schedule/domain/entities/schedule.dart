@@ -7,7 +7,7 @@ part 'schedule.g.dart';
 class Schedule {
   Id? id;
 
-  @Index()
+  @Index(unique: true)
   final DateTime date;
 
   final courts = IsarLinks<Court>();

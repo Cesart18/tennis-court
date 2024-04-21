@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tennis_court/features/court/domain/entities/court.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
+import 'package:tennis_court/features/schedule/infrastructure/infrastructure.dart';
 import '../presentation.dart';
 
 final schedulesProvider =
@@ -16,10 +17,16 @@ class SchedulesNotifier extends StateNotifier<SchedulesState> {
         loadSchedules();
       }
 
+  
+
   Future<void> createSchedule(Schedule schedule, Court court) async {
-    await scheduleRepository.createSchedule(schedule, court);
+    try {
+      await scheduleRepository.createSchedule(schedule, court);
     schedule.courts.add(court);
     state = state.copyWith(schedules: [...state.schedules, schedule]);
+    } on CustomError catch (e) {
+      onGetErrorMessage(e.message);
+    }
   }
 
   Future<void> deleteSchedule( Schedule schedule )async{
@@ -29,22 +36,37 @@ class SchedulesNotifier extends StateNotifier<SchedulesState> {
     );
   }
 
-Future<void> loadSchedules () async {
+Future<void> loadSchedules() async {
   final schedules = await scheduleRepository.loadSchedules();
   state = state.copyWith(
     schedules: schedules
   );
 }
 
+void onGetErrorMessage([ String? errorMessage ]){
+    state = state.copyWith(
+      errorMessage: errorMessage
+    );
+  }
 
 }
 
 
 class SchedulesState {
   final List<Schedule> schedules;
+  final String errorMessage;
 
-  SchedulesState({this.schedules = const []});
+  SchedulesState({
+    this.schedules = const [],
+    this.errorMessage = ''
+    });
 
-  SchedulesState copyWith({List<Schedule>? schedules}) =>
-      SchedulesState(schedules: schedules ?? this.schedules);
+  SchedulesState copyWith({
+    List<Schedule>? schedules,
+    String? errorMessage,
+    }) =>
+      SchedulesState(
+        schedules: schedules ?? this.schedules,
+        errorMessage: errorMessage ?? this.errorMessage
+        );
 }

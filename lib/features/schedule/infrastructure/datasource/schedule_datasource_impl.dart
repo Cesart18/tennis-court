@@ -3,6 +3,7 @@
   import 'package:isar/isar.dart';
 import 'package:tennis_court/features/court/domain/entities/court.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
+import 'package:tennis_court/features/schedule/infrastructure/infrastructure.dart';
 import 'package:tennis_court/shared/shared.dart';
 
 class ScheduleDatasourceImpl extends ScheduleDatasource{
@@ -17,10 +18,17 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
     final isar = await db;
     final newSchedule = schedule
     ..courts.add(court);
-    await isar.writeTxn(() async{
+    try {
+      await isar.writeTxn(() async{
       await isar.schedules.put(newSchedule);
       await schedule.courts.save();
     });
+    } on IsarError catch (e) {
+      if(e.message == 'Unique index violated.'){
+        throw CustomError(message: 'Esta hora no esta disponible');
+      }
+      
+    }
     
   }
 

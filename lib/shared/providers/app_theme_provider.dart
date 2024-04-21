@@ -3,4 +3,4 @@
 
 
 
-final appThemeProvider = StateProvider<bool>((ref) => false);
+final appThemeProvider = StateProvider<bool>((ref) => true);

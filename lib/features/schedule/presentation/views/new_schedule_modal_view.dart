@@ -39,7 +39,7 @@ class NewScheduleModalView extends ConsumerWidget {
           ),
          CustomFormField(
           keyboardType: TextInputType.name,
-           labelText: DateFormat('dd-MM-yyyy').format(scheduleForm.date.value!),
+           labelText: DateFormat('EEEE dd-MM ', Intl.getCurrentLocale()).format(scheduleForm.date.value!),
             length: 20,
              prefixIcon: const Icon(CupertinoIcons.calendar),
              readOnly: true,

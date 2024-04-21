@@ -66,7 +66,7 @@ class ScheduleListView extends ConsumerWidget {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Fecha: ${DateFormat('dd-MM-yyyy').format(schedule.date)}'),
+                Text('Fecha: ${DateFormat('EEEE dd-MM').format(schedule.date)}'),
                 Text('Hora: ${DateFormat('hh:mm a').format(schedule.date)}'),
 
               ],

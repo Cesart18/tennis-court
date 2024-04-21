@@ -9,26 +9,26 @@ class NewScheduleModalView extends ConsumerWidget {
   final List<Court> courts;
   const NewScheduleModalView({super.key, required this.courts});
 
-  void showSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
+
+
+ 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).textTheme;
     final scheduleForm = ref.watch(scheduleFormProvider);
+    final scheduleState = ref.watch(schedulesProvider);
 
-    ref.listen(schedulesProvider, (previous, next) {
+      ref.listen(schedulesProvider, (previous, next) {
       if (next.errorMessage.isEmpty) return;
     Future.delayed(const Duration(milliseconds: 100));
-      showSnackbar(context, next.errorMessage);
+      ref.read(schedulesProvider.notifier).onGetErrorMessage(next.errorMessage);
     });
+    
 
     return SizedBox(
       width: 320,
-      height: 450,
+      height: 500,
       child: Column(
         children: [
           Text(
@@ -106,7 +106,14 @@ class NewScheduleModalView extends ConsumerWidget {
           CourtsDropDownMenuButton(
             courts: courts,
           ),
-          
+        if(scheduleState.errorMessage.length > 2)
+        const SizedBox(height: 30,),
+        Center(
+          child: Text(
+            scheduleState.errorMessage,
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
         ],
       ),
     );

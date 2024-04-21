@@ -15,6 +15,17 @@ class NewScheduleModal extends ConsumerWidget {
       elevation: 0,
       content:  NewScheduleModalView(courts: courts,),
       actions: [
+
+        CustomActionButton(
+          text: 'Aceptar',
+           onPressed: (){
+           ref.watch(scheduleFormProvider.notifier).onFormSubmit();
+           if( !isValid ) return;
+           context.pop();
+           }),
+
+        const SizedBox(width: 20),
+
         CustomActionButton(
           text: 'Cancelar',
           bgColor: Colors.red,
@@ -24,16 +35,9 @@ class NewScheduleModal extends ConsumerWidget {
            }),
 
 
-        const SizedBox(width: 20),
 
 
-        CustomActionButton(
-          text: 'Aceptar',
-           onPressed: (){
-           ref.watch(scheduleFormProvider.notifier).onFormSubmit();
-           if( !isValid ) return;
-           context.pop();
-           }),
+        
       ],
     );
   }

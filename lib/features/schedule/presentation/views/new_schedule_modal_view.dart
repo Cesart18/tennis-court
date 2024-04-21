@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:tennis_court/features/court/domain/domain.dart';
 import '../presentation.dart';
 
@@ -38,14 +39,14 @@ class NewScheduleModalView extends ConsumerWidget {
           ),
          CustomFormField(
           keyboardType: TextInputType.name,
-           labelText: 'Fecha',
+           labelText: DateFormat('dd-MM-yyyy').format(scheduleForm.date.value!),
             length: 20,
              prefixIcon: const Icon(CupertinoIcons.calendar),
              readOnly: true,
-             errorText:  scheduleForm.isFormPosted ? scheduleForm.date?.errorMessage : null, 
+             errorText:  scheduleForm.isFormPosted ? scheduleForm.date.errorMessage : null, 
              onTap: () async {
                 final DateTime? pickedDate = await showDatePicker(
-                errorFormatText: scheduleForm.date?.errorMessage ,
+                errorFormatText: scheduleForm.date.errorMessage ,
                 context: context, 
                 initialDate: DateTime.now(),
                 firstDate: DateTime.now(),
@@ -62,11 +63,11 @@ class NewScheduleModalView extends ConsumerWidget {
 
          CustomFormField(
           keyboardType: TextInputType.name,
-           labelText: 'Hora',
+          labelText: DateFormat('hh:mm a').format(scheduleForm.date.value!),
             length: 20,
              prefixIcon: const Icon(CupertinoIcons.clock),
              readOnly: true,
-             errorText: scheduleForm.isFormPosted ? scheduleForm.time?.errorMessage : null,
+             errorText: scheduleForm.isFormPosted ? scheduleForm.time.errorMessage : null,
              onTap: () async {
               final TimeOfDay? pickedTime = await showTimePicker(
                 context: context,

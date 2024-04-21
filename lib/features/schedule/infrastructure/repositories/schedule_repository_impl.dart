@@ -25,9 +25,5 @@ class ScheduleRepositoryImpl extends ScheduleRepository{
     return datasource.loadSchedules();
   }
 
-  @override
-  Future<List<Schedule>> getScheduleByCourt(int courtId) {
-    return datasource.getScheduleByCourt(courtId);
-  }
 
 }

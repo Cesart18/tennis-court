@@ -23,7 +23,7 @@ enum ScheduleTimeError { invalid }
 
   @override
   ScheduleTimeError? validator(TimeOfDay? value) {
-    if( value == null ) return ScheduleTimeError.invalid;
+    if( value == null || value == TimeOfDay.now() ) return ScheduleTimeError.invalid;
     return null;
   }
 

@@ -10,7 +10,7 @@ final scheduleFormProvider = StateNotifierProvider<ScheduleFormNotifier, Schedul
   final courst = ref.watch(courtsProvider).courts;
   final scheduleCallback = ref.watch(schedulesProvider.notifier).createSchedule;
   return ScheduleFormNotifier(court: courst[0],
-  scheduleCallback: scheduleCallback);
+  scheduleCallback: scheduleCallback );
 });
 
 
@@ -18,8 +18,8 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
   final Function( Schedule, Court ) scheduleCallback;
   ScheduleFormNotifier({
     required Court court,
-    required this.scheduleCallback
-  }): super(ScheduleFormState(court: court));
+    required this.scheduleCallback,
+  }): super(ScheduleFormState(court: court, date: ScheduleDate.dirty(DateTime.now()), time: ScheduleTime.dirty(TimeOfDay.now())  ) );
 
   onCourtSelectChange( Court court ){
     state = state.copyWith(
@@ -31,7 +31,7 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
     final newName = ScheduleUserName.dirty(name);
     state = state.copyWith(
       userName: newName,
-      isValid: Formz.validate([ newName, state.date!, state.time! ])
+      isValid: Formz.validate([ newName, state.date, state.time ])
     );
   }
 
@@ -39,33 +39,36 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
     final newDate = ScheduleDate.dirty(date);
     state = state.copyWith(
       date: newDate,
-      isValid: Formz.validate([ newDate, state.userName, state.time! ])
+      isValid: Formz.validate([ newDate, state.userName, state.time ])
     );
   }
 
   onTimeChanged( TimeOfDay time ){
     final newTime = ScheduleTime.dirty(time);
+    final newDate = ScheduleDate.dirty( DateTime(state.date.value!.year, state.date.value!.month, state.date.value!.day,
+      newTime.value!.hour, newTime.value!.minute
+    ) );
     state = state.copyWith(
       time: newTime,
-      isValid: Formz.validate([ newTime, state.userName, state.date!])
+      date: newDate,
+      isValid: Formz.validate([ newTime, state.userName, state.date])
     );
   }
 
   onFormSubmit() async {
     _touchEveryField();
+  
     if( !state.isValid ) return;
 
-
-  final parseTime =  '${state.time!.value!.hour}:${state.time!.value!.hour}';
-  final newSchedule = Schedule(date: state.date!.value!, time: parseTime, userName: state.userName.value);
+  final newSchedule = Schedule(date: state.date.value!, userName: state.userName.value);
 
     await scheduleCallback(newSchedule, state.court);
   }
 
   _touchEveryField(){
     final userName = ScheduleUserName.dirty(state.userName.value);
-    final date = ScheduleDate.dirty(state.date?.value);
-    final time = ScheduleTime.dirty(state.time?.value);
+    final date = ScheduleDate.dirty(state.date.value);
+    final time = ScheduleTime.dirty(state.time.value);
     state = state.copyWith(
       userName: userName,
       date: date,
@@ -84,8 +87,8 @@ class ScheduleFormState {
 
     final ScheduleUserName userName;
     final Court court;
-    final ScheduleDate? date;
-    final ScheduleTime? time;
+    final ScheduleDate date;
+    final ScheduleTime time;
     final bool isFormPosted;
     final bool isValid;
 
@@ -93,8 +96,8 @@ class ScheduleFormState {
   ScheduleFormState({
      this.userName = const ScheduleUserName.pure(),
      required this.court,
-      this.date ,
-      this.time,
+     required this.date ,
+     required this.time,
      this.isFormPosted = false, 
      this.isValid = false,
      });

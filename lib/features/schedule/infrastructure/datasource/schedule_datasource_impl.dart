@@ -20,28 +20,25 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
     await isar.writeTxn(() async{
       await isar.schedules.put(newSchedule);
       await schedule.courts.save();
-      
+    });
+    
+  }
+
+  @override
+  Future<void> deleteSchedule(Schedule schedule) async {
+    final isar = await db;
+    await isar.writeTxn(() async{
+      isar.schedules.delete(schedule.id!);
     });
   }
 
-  @override
-  Future<void> deleteSchedule(Schedule schedule) {
-    // TODO: implement deleteSchedule
-    throw UnimplementedError();
-  }
 
   @override
-  Future<List<Schedule>> getScheduleByCourt(int courtId) async {
+  Future<List<Schedule>> loadSchedules() async {
     final isar = await db;
-    final schedule = await isar.schedules.filter().courts((q) => q.idEqualTo(courtId))
-    .findAll();
-    return Future.value(schedule);
-  }
+    final schedules = await isar.schedules.where().findAll();
 
-  @override
-  Future<List<Schedule>> loadSchedules() {
-    // TODO: implement loadSchedules
-    throw UnimplementedError();
+    return Future.value(schedules);
   }
 
   

@@ -46,7 +46,7 @@ class _HomeScreenView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
     final courts = ref.watch(courtsProvider).courts;
-    final schedules = ref.watch(schedulesProvider).schedules;
+    final schedules = sortSchedulesByDate(ref.watch(schedulesProvider).schedules);
     return SafeArea(
       child: Column(
         children: [

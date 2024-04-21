@@ -12,14 +12,33 @@ final schedulesProvider =
 class SchedulesNotifier extends StateNotifier<SchedulesState> {
   final ScheduleRepository scheduleRepository;
   SchedulesNotifier({required this.scheduleRepository})
-      : super(SchedulesState());
+      : super(SchedulesState()){
+        loadSchedules();
+      }
 
   Future<void> createSchedule(Schedule schedule, Court court) async {
     await scheduleRepository.createSchedule(schedule, court);
     schedule.courts.add(court);
     state = state.copyWith(schedules: [...state.schedules, schedule]);
   }
+
+  Future<void> deleteSchedule( Schedule schedule )async{
+    await scheduleRepository.deleteSchedule(schedule);
+    state = state.copyWith(
+      schedules: [...state.schedules..removeWhere((element) => element.id == schedule.id)]
+    );
+  }
+
+Future<void> loadSchedules () async {
+  final schedules = await scheduleRepository.loadSchedules();
+  state = state.copyWith(
+    schedules: schedules
+  );
 }
+
+
+}
+
 
 class SchedulesState {
   final List<Schedule> schedules;

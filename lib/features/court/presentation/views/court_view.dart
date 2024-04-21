@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tennis_court/features/court/presentation/providers/court_provider.dart';
 import 'package:tennis_court/features/schedule/presentation/presentation.dart';
+import 'package:tennis_court/shared/shared.dart';
 import 'package:tennis_court/shared/widgets/custom_button.dart';
 
 class CourtView extends ConsumerWidget {
@@ -18,8 +19,9 @@ class CourtView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final court = ref.watch(courtProvider(courtId)).court;
-    final schedules = ref.watch(courtProvider(courtId)).schedules;
     final colors = Theme.of(context).colorScheme;
+    final schedules = ref.watch(schedulesProvider).schedules;
+    final schedulesByCourt = sortSchedulesByDate(schedules.where(( schedule ) => schedule.courts.contains(court)).toList());
     return Scaffold(
       appBar: AppBar(
         title: Text('Cancha: ${court?.name ?? 'Cancha no encontrada'}'),
@@ -34,7 +36,7 @@ class CourtView extends ConsumerWidget {
             const Text('Lista de agendas'),
             const SizedBox(height: 10,),
             Expanded(
-              child: ScheduleListView(schedules: schedules)
+              child: ScheduleListView(schedules: schedulesByCourt)
               ),
             CustomButton(text: 'Nueva agenda', onPressed: (){
                 _showModal(context, NewScheduleModal(courts: [court!]));

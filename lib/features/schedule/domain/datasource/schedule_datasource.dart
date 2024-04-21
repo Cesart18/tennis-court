@@ -12,7 +12,5 @@ abstract class ScheduleDatasource {
 
     Future<List<Schedule>> loadSchedules();
 
-    Future<List<Schedule>> getScheduleByCourt( int courtId );
-
 
   }

@@ -5,7 +5,7 @@ import 'package:tennis_court/features/schedule/domain/domain.dart';
 import 'package:tennis_court/features/schedule/presentation/presentation.dart';
 
 
-final courtProvider = StateNotifierProvider.family<CourtNotifier,CourtState, String>((ref, courtId) {
+final courtProvider = StateNotifierProvider.family.autoDispose<CourtNotifier,CourtState, String>((ref, courtId) {
 
   final courtRepository = ref.watch(courtRepositoryProvider);
   final scheduleRepository = ref.watch(schedulesRepositoryProvider);
@@ -35,16 +35,9 @@ class CourtNotifier extends StateNotifier<CourtState> {
       );
     }
 
-  Future<void> loadSchedules() async {
-    await state.court!.schedule.load();
-    final schedules = await scheduleRepository.getScheduleByCourt(state.court!.id);
-    state = state.copyWith(
-      schedules: schedules
-    );
-
+  
   }
 
-  }
 
 
 
@@ -53,22 +46,19 @@ class CourtNotifier extends StateNotifier<CourtState> {
 
     final String id;
     final Court? court;
-    final List<Schedule>? schedules;
+
 
   CourtState({
     required this.id,
     this.court,
-    this.schedules = const []
     });
 
   CourtState copyWith({
     String? id,
     Court? court,
-    List<Schedule>? schedules,
   }) => CourtState(
     id: id ?? this.id,
     court: court ?? this.court,
-    schedules: schedules ?? this.schedules
   );
 
 

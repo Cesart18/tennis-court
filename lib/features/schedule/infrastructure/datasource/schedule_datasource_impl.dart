@@ -22,17 +22,9 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
     final courtHasSchedule = await court.schedules.filter()
     .initialDateEqualTo(schedule.initialDate).findFirst();
 
+    if( courtHasSchedule != null) throw CustomError(message: 'Horario para esta cancha no disponible');
 
     try {
-      
-      if( courtHasSchedule != null){
-        throw CustomError(message: 'Horario para esta cancha no disponible');
-      }
-      for (final existingSchedule in court.schedules) {
-        if (schedule.initialDate.isBefore(existingSchedule.endDate) && schedule.endDate.isAfter(existingSchedule.initialDate)) {
-          throw CustomError(message: 'La nueva agenda se superpone con una agenda existente');
-        }
-        }
       await isar.writeTxn(() async{
       await isar.schedules.put(newSchedule);
       await schedule.courts.save();

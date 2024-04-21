@@ -23,7 +23,10 @@ class SchedulesNotifier extends StateNotifier<SchedulesState> {
     try {
       await scheduleRepository.createSchedule(schedule, court);
     schedule.courts.add(court);
-    state = state.copyWith(schedules: [...state.schedules, schedule]);
+    state = state.copyWith(
+      schedules: [...state.schedules, schedule],
+      errorMessage: ''
+      );
     } on CustomError catch (e) {
       onGetErrorMessage(e.message);
     }

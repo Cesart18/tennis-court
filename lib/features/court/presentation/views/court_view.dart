@@ -19,27 +19,22 @@ class CourtView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final court = ref.watch(courtProvider(courtId)).court;
     final schedules = ref.watch(courtProvider(courtId)).schedules;
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cancha: ${court?.name ?? 'Cancha no encontrada'}')
+        title: Text('Cancha: ${court?.name ?? 'Cancha no encontrada'}'),
+        shadowColor: colors.onBackground,
+        elevation: 1,
       ),
       body:  SafeArea(
         child: Center(
           child: Column(
           children: [
-            const Text('Agenda de la cancha'),
-
-            // TODO: Agregar schedules por cancha
-
+            const SizedBox(height: 10,),
+            const Text('Lista de agendas'),
+            const SizedBox(height: 10,),
             Expanded(
-              child: ListView.builder(
-                itemCount: schedules!.length,
-                itemBuilder: (context, index) {
-                  final schedule = schedules[index];
-                  return ListTile(
-                    title: Text(schedule.userName),
-                  );
-                },)
+              child: ScheduleListView(schedules: schedules)
               ),
             CustomButton(text: 'Nueva agenda', onPressed: (){
                 _showModal(context, NewScheduleModal(courts: [court!]));

@@ -46,6 +46,7 @@ class _HomeScreenView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
     final courts = ref.watch(courtsProvider).courts;
+    final schedules = ref.watch(schedulesProvider).schedules;
     return SafeArea(
       child: Column(
         children: [
@@ -63,11 +64,11 @@ class _HomeScreenView extends ConsumerWidget {
            Divider(color: colors.onBackground,),
           const SizedBox(height: 5,),
           
-        // TODO: Modificar la vista de las agendas 
-              const Text('Agenda'),
+              const Text('Lista de agendas'),
+          const SizedBox(height: 10),
 
            Expanded(
-            child: Container()
+            child: ScheduleListView(schedules: schedules)
           ),
       
       

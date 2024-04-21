@@ -9,8 +9,6 @@ class Schedule {
 
   @Index()
   final DateTime date;
-  @Index(unique: true)
-  final String time;
 
   final courts = IsarLinks<Court>();
 
@@ -20,7 +18,6 @@ class Schedule {
 
   Schedule({
       required this.date,
-      required this.time,
       required this.userName
       });
 }

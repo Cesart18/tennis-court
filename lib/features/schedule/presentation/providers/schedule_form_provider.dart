@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
+import 'package:tennis_court/features/api/presentation/providers/date_wheater_provider.dart';
 import 'package:tennis_court/features/court/domain/domain.dart';
 import 'package:tennis_court/features/court/presentation/presentation.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
@@ -9,16 +10,21 @@ import 'package:tennis_court/features/schedule/presentation/presentation.dart';
 final scheduleFormProvider = StateNotifierProvider.autoDispose<ScheduleFormNotifier, ScheduleFormState>((ref) {
   final courst = ref.watch(courtsProvider).courts;
   final scheduleNotifer = ref.watch(schedulesProvider.notifier);
-  return ScheduleFormNotifier(court: courst[0],
-  scheduleNotifer: scheduleNotifer );
+  final dateWheaterCallback = ref.watch(dateWheaterProvider.notifier).getWheaterByDate;
+  return ScheduleFormNotifier(
+    court: courst[0],
+  scheduleNotifer: scheduleNotifer ,
+  dateWheaterCallback: dateWheaterCallback );
 });
 
 
 class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
   final SchedulesNotifier scheduleNotifer;
+  final Future<void>Function( DateTime ) dateWheaterCallback;
   ScheduleFormNotifier({
     required Court court,
     required this.scheduleNotifer,
+    required this.dateWheaterCallback
   }): super(ScheduleFormState(court: court, date: ScheduleDate.dirty(DateTime.now()), initialTime: ScheduleInitialTime.dirty(TimeOfDay.now())  ) );
 
 
@@ -48,12 +54,13 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
 
 
 
-  onDateChanged( DateTime date ){
+  onDateChanged( DateTime date ) async {
     final schedulesOfCourt = state.court.schedules.toList().where((e) => e.initialDate.day == date.day).toList();
     if( schedulesOfCourt.length > 2  ) {
       return scheduleNotifer.onGetErrorMessage('Agendas de la cancha ${state.court.name} por dia alcanza el maximo de 3');
       
     }
+    await dateWheaterCallback( date );
     scheduleNotifer.onGetErrorMessage('');
     final newDate = ScheduleDate.dirty(date);
     state = state.copyWith(

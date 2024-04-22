@@ -20,7 +20,7 @@ class SchedulesNotifier extends StateNotifier<SchedulesState> {
 
   
 
-  Future<void> createSchedule(Schedule schedule, Court court, [ ForecastDay? wheater ]) async {
+  Future<void> createSchedule(Schedule schedule, Court court, [ WheaterDay? wheater ]) async {
 
   final schedulesOfCourt = state.schedules.where((element) => element.court.value == court).toList();
 

@@ -1,11 +1,11 @@
 import '../domain.dart';
 
-class ForecastDay {
+class WheaterDay {
   final int dailyWillItRain;
   final int dailyChanceOfRain;
   final WheaterCondition condition;
 
-  ForecastDay(
+  WheaterDay(
       {required this.dailyWillItRain,
       required this.dailyChanceOfRain,
       required this.condition});

@@ -8,7 +8,12 @@ class DateWheaterRepositoryImpl extends DateWheaterRepository {
       : datasource = datasource ?? DateWheaterDatasourceImpl();
 
   @override
-  Future<DateWheater> getWheaterByDate({ int days = 1 }) {
-    return datasource.getWheaterByDate(days: days);
+  Future<WheaterForecast> getWheaterByDays({ int days = 1 }) {
+    return datasource.getWheaterByDays(days: days);
+  }
+  
+  @override
+  Future<WheaterForecast> getWheaterByDate(DateTime date) {
+    return datasource.getWheaterByDate(date);
   }
 }

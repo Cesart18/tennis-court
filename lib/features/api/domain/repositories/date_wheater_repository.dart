@@ -4,7 +4,9 @@
   abstract class DateWheaterRepository {
 
 
-    Future<DateWheater> getWheaterByDate({ int days = 1 });
+    Future<WheaterForecast> getWheaterByDays({ int days = 1 });
+
+    Future<WheaterForecast> getWheaterByDate( DateTime date );
 
 
   }

@@ -1,8 +1,8 @@
 // entities
-export 'entities/date_wheater.dart';
+export 'entities/wheater_forecast.dart';
 export 'entities/wheater_condition.dart';
-export 'entities/forecast_day.dart';
-
+export 'entities/wheater_day.dart';
+export 'entities/wheare_forecast_day.dart';
 
 // models
 export 'models/wheate_api_response.dart';

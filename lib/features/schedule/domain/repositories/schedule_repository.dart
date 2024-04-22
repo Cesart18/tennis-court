@@ -7,7 +7,7 @@ import 'package:tennis_court/features/schedule/domain/domain.dart';
 
 abstract class ScheduleRepository {
 
-    Future<void> createSchedule( Schedule schedule,  Court court, [ ForecastDay? wheater ] );
+    Future<void> createSchedule( Schedule schedule,  Court court, [ WheaterDay? wheater ] );
 
     Future<void> deleteSchedule( Schedule schedule );
 

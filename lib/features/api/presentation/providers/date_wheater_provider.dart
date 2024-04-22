@@ -16,18 +16,29 @@ class DateWheaterNotifier extends StateNotifier<DateWheaterState> {
     required this.dateWheaterRepository
   }): super(DateWheaterState());
   
-  Future<DateWheater> getWheaterByDate( DateTime date ) async {
+  Future<List<WheaterForecastDay>> getWheaterByDate( DateTime date ) async {
 
     final diference = date.difference(DateTime.now()).inDays + 2;
 
     final days = ( diference == 0 ) ? 1 : diference;
-    print(diference);
-    final dateWheater = await dateWheaterRepository.getWheaterByDate(days: days);
 
-    state = state.copyWith(
-      dateWheater: dateWheater
-    );
-    return dateWheater;
+    final alreadyWheater = state.wheateForecastDay.any((element) => element.date == date);
+
+    if( !alreadyWheater ){
+      if( days <= 14 ){
+        final dateWheater = await dateWheaterRepository.getWheaterByDays(days: days);
+        state = state.copyWith(
+          wheateForecastDay: [...state.wheateForecastDay, ...dateWheater.wheaterForcastDay]
+        );
+      }else{
+        final dateWheaterByDate = await dateWheaterRepository.getWheaterByDate(date);
+        state = state.copyWith(
+          wheateForecastDay: [...state.wheateForecastDay, ...dateWheaterByDate.wheaterForcastDay]
+        );
+      }
+    }
+
+    return state.wheateForecastDay;
   }
 
 
@@ -36,20 +47,17 @@ class DateWheaterNotifier extends StateNotifier<DateWheaterState> {
 
 class DateWheaterState {
 
-    final DateWheater? dateWheater;
-    final bool isLoading;
+    final List<WheaterForecastDay> wheateForecastDay;
+
 
   DateWheaterState({
-     this.dateWheater,
-    this.isLoading = false
+     this.wheateForecastDay = const [],
     });
 
     DateWheaterState copyWith({
-      DateWheater? dateWheater,
-      bool? isLoading,
+      List<WheaterForecastDay>? wheateForecastDay,
     }) => DateWheaterState(
-      dateWheater: dateWheater ?? this.dateWheater,
-      isLoading: isLoading ?? this.isLoading
+      wheateForecastDay: wheateForecastDay ?? this.wheateForecastDay,
     );
 
   }

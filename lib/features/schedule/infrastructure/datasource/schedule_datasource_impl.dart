@@ -1,7 +1,7 @@
 
 
 import 'package:isar/isar.dart';
-import 'package:tennis_court/features/api/domain/entities/forecast_day.dart';
+import 'package:tennis_court/features/api/domain/entities/wheater_day.dart';
 import 'package:tennis_court/features/court/domain/domain.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
 import 'package:tennis_court/features/schedule/infrastructure/infrastructure.dart';
@@ -15,7 +15,7 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
   }
 
   @override
-  Future<void> createSchedule(Schedule schedule, Court court, [ForecastDay? wheater]) async {
+  Future<void> createSchedule(Schedule schedule, Court court, [WheaterDay? wheater]) async {
     final isar = await db;
     final newSchedule = schedule
     ..court.value = court;
@@ -49,7 +49,8 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
       if(e.message == 'Unique index violated.'){
         throw CustomError(message: 'Esta hora no esta disponible');
       }
-      
+    }catch (e){
+      throw CustomError(message: 'seleccione la fecha');
     }
   }
   

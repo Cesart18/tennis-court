@@ -1,6 +1,6 @@
 
 
-  import 'package:tennis_court/features/api/domain/entities/forecast_day.dart';
+  import 'package:tennis_court/features/api/domain/entities/wheater_day.dart';
 import 'package:tennis_court/features/court/domain/domain.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
 import '../infrastructure.dart';
@@ -12,7 +12,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository{
   ScheduleRepositoryImpl({ScheduleDatasource? datasource}):datasource = datasource ?? ScheduleDatasourceImpl();
 
   @override
-  Future<void> createSchedule(Schedule schedule, Court court, [ForecastDay? wheater]) {
+  Future<void> createSchedule(Schedule schedule, Court court, [WheaterDay? wheater]) {
     return datasource.createSchedule(schedule, court, wheater);
   }
 

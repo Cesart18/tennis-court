@@ -23,23 +23,46 @@ class DateWheaterDatasourceImpl extends DateWheaterDatasource{
 
 
   @override
-  Future<DateWheater> getWheaterByDate({ int days = 1 }) async {
+  Future<WheaterForecast> getWheaterByDays({ int days = 1 }) async {
     try {
-    final response = await dio.get('/$queryForecast',
+
+    final resp = await dio.get('/$queryForecast',
     queryParameters: {
       'days': days
     });
-    final apiResponse = WheaterApiResponse.fromJson(response.data);
-    final DateWheater dateWheater = WheaterMapper.wheaterApiReponseToEntity(apiResponse);
-    print(response.data);
+    final apiResponse = WheaterApiResponse.fromJson(resp.data);
+    final WheaterForecast dateWheater = WheaterMapper.wheaterApiReponseToEntity(apiResponse);
     return dateWheater;
+
     } on DioException catch (e) {
       if( e.type == DioExceptionType.badResponse ) {
         throw CustomError(message: 'Error en la solicitud del clima');
         }
         throw Exception();
+    }catch (e){
+        throw Exception();
     }
 
+  }
+  
+  @override
+  Future<WheaterForecast> getWheaterByDate(DateTime date) async {
+    try {
+    final resp = await dio.get('/$queryFuture', queryParameters: {
+        'dt': '${date.year}-${date.month}-${date.day}'
+    });
+    final apiResponse = WheaterApiResponse.fromJson(resp.data);
+    final WheaterForecast dateWheater = WheaterMapper.wheaterApiReponseToEntity(apiResponse);
+    return dateWheater;
+      
+    } on DioException catch (e) {
+      if( e.type == DioExceptionType.badResponse ) {
+        throw CustomError(message: 'Error en la solicitud del clima');
+        }
+        throw Exception();
+    }catch (e){
+        throw Exception();
+    }
   }
 
 }

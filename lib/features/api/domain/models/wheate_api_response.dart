@@ -65,9 +65,6 @@ class Condition {
     };
 }
 
-
-
-
 class Forecast {
     final List<Forecastday> forecastday;
 
@@ -147,30 +144,18 @@ class Day {
 }
 
 class Hour {
-    final String time;
-    final Condition condition;
-    final int willItRain;
-    final int chanceOfRain;
+    final Astro condition;
 
     Hour({
-        required this.time,
         required this.condition,
-        required this.willItRain,
-        required this.chanceOfRain,
     });
 
     factory Hour.fromJson(Map<String, dynamic> json) => Hour(
-        time: json["time"],
-        condition: Condition.fromJson(json["condition"]),
-        willItRain: json["will_it_rain"],
-        chanceOfRain: json["chance_of_rain"],
+        condition: Astro.fromJson(json["condition"]),
     );
 
     Map<String, dynamic> toJson() => {
-        "time": time,
         "condition": condition.toJson(),
-        "will_it_rain": willItRain,
-        "chance_of_rain": chanceOfRain,
     };
 }
 
@@ -216,16 +201,4 @@ class Location {
         "localtime_epoch": localtimeEpoch,
         "localtime": localtime,
     };
-}
-
-class EnumValues<T> {
-    Map<String, T> map;
-    late Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-        reverseMap = map.map((k, v) => MapEntry(v, k));
-        return reverseMap;
-    }
 }

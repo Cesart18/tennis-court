@@ -27,7 +27,7 @@ class DateWheaterDatasourceImpl extends DateWheaterDatasource{
     try {
     final response = await dio.get('/$queryForecast',
     queryParameters: {
-      'days': 1
+      'days': days
     });
     final apiResponse = WheaterApiResponse.fromJson(response.data);
     final DateWheater dateWheater = WheaterMapper.wheaterApiReponseToEntity(apiResponse);

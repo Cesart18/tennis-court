@@ -18,10 +18,10 @@ class DateWheaterNotifier extends StateNotifier<DateWheaterState> {
   
   Future<DateWheater> getWheaterByDate( DateTime date ) async {
 
-    final diference = DateTime.now().difference(date).inDays;
+    final diference = date.difference(DateTime.now()).inDays + 2;
 
     final days = ( diference == 0 ) ? 1 : diference;
-
+    print(diference);
     final dateWheater = await dateWheaterRepository.getWheaterByDate(days: days);
 
     state = state.copyWith(

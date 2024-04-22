@@ -67,7 +67,15 @@ class ScheduleListView extends ConsumerWidget {
               children: [
                 Text('Fecha: ${DateFormat('EEEE dd-MM').format(schedule.initialDate)}'),
                 Text('Hora inicial: ${DateFormat('hh:mm a').format(schedule.initialDate)}'),
-                Text('Hora de salida:  ${DateFormat('hh:mm a').format(schedule.endDate)}')
+                Text('Hora de salida:  ${DateFormat('hh:mm a').format(schedule.endDate)}'),
+                Row(
+                  children: [
+                Text('${schedule.conditionText}'),
+                const SizedBox(width: 5,),
+                  Image.network('https:${schedule.icon}', width: 20,)
+                  ],
+                ),
+                Text('% de lluvia:  ${schedule.chanceOfRain}')
               ],
             ),
           ),

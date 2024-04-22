@@ -8,7 +8,7 @@ import 'package:tennis_court/features/court/presentation/presentation.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
 import 'package:tennis_court/features/schedule/presentation/presentation.dart';
 
-final scheduleFormProvider = StateNotifierProvider.autoDispose<ScheduleFormNotifier, ScheduleFormState>((ref) {
+final scheduleFormProvider = StateNotifierProvider<ScheduleFormNotifier, ScheduleFormState>((ref) {
   final courst = ref.watch(courtsProvider).courts;
   final scheduleNotifer = ref.watch(schedulesProvider.notifier);
   final dateWheaterCallback = ref.watch(dateWheaterProvider.notifier).getWheaterByDate;

@@ -14,6 +14,7 @@ class NewScheduleModal extends ConsumerWidget {
     final errorMessage = ref.watch(schedulesProvider).errorMessage;
     
     return AlertDialog(
+      scrollable: true,
       elevation: 0,
       content:  NewScheduleModalView(courts: courts,),
       actions: [

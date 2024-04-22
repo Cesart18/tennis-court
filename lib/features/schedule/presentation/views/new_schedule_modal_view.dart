@@ -45,6 +45,7 @@ class NewScheduleModalView extends ConsumerWidget {
              prefixIcon: const Icon(CupertinoIcons.person_crop_circle),
              onChanged: ref.read(scheduleFormProvider.notifier).onUserNameChanged,
              errorText: scheduleForm.isFormPosted ?  scheduleForm.userName.errorMessage : null,
+             onFieldSubmitted: (_) => ref.read(scheduleFormProvider.notifier).onFormSubmit(),
              ),
           const SizedBox(
             height: 10,
@@ -55,6 +56,7 @@ class NewScheduleModalView extends ConsumerWidget {
             length: 20,
              prefixIcon: const Icon(CupertinoIcons.calendar),
              readOnly: true,
+             onFieldSubmitted: (_) => ref.read(scheduleFormProvider.notifier).onFormSubmit(),
              errorText:  scheduleForm.isFormPosted ? scheduleForm.date.errorMessage : null, 
              onTap: () async {
                 final DateTime? pickedDate = await showDatePicker(
@@ -81,6 +83,7 @@ class NewScheduleModalView extends ConsumerWidget {
             length: 20,
              prefixIcon: const Icon(CupertinoIcons.clock),
              readOnly: true,
+             onFieldSubmitted: (_) => ref.read(scheduleFormProvider.notifier).onFormSubmit(),
              errorText: scheduleForm.isFormPosted ? scheduleForm.initialTime.errorMessage : null,
              onTap: () async {
               final TimeOfDay? pickedTime = await showTimePicker(

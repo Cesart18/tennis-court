@@ -13,6 +13,7 @@ class HomeScreen extends ConsumerWidget {
     final colors = Theme.of(context).colorScheme;
     final isDarkMode = ref.watch(appThemeProvider);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         shadowColor: colors.onBackground,
         elevation: 1,

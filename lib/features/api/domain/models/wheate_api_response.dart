@@ -131,9 +131,9 @@ class Day {
     });
 
     factory Day.fromJson(Map<String, dynamic> json) => Day(
-        dailyWillItRain: json["daily_will_it_rain"],
-        dailyChanceOfRain: json["daily_chance_of_rain"],
-        condition: Condition.fromJson(json["condition"]),
+        dailyWillItRain: json["daily_will_it_rain"] ?? '',
+        dailyChanceOfRain: json["daily_chance_of_rain"] ?? '',
+        condition: Condition.fromJson(json["condition"] ?? ''),
     );
 
     Map<String, dynamic> toJson() => {

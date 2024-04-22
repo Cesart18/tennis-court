@@ -6,3 +6,4 @@ export 'repositories/date_wheater_repository_impl.dart';
 
 // mappers
 export 'mappers/wheater_mapper.dart';
+export 'mappers/future_wheater_mapper.dart';

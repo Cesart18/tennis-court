@@ -14,7 +14,7 @@ class ScheduleDate extends FormzInput <DateTime?, ScheduleInitialDateError> {
   String? get errorMessage {
     if( isValid || isPure ) return null;
 
-  if ( displayError == ScheduleInitialDateError.invalid ) return 'Fecha es requerida';
+  if ( displayError == ScheduleInitialDateError.invalid ) return 'Seleccione una fecha';
 
   return null;
   }
@@ -22,7 +22,7 @@ class ScheduleDate extends FormzInput <DateTime?, ScheduleInitialDateError> {
 
   @override
   ScheduleInitialDateError? validator(DateTime? value) {
-    if( value == null ) return ScheduleInitialDateError.invalid;
+    if( value == null || value.hour == DateTime.now().hour) return ScheduleInitialDateError.invalid;
     return null;
   }
 

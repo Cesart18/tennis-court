@@ -61,6 +61,7 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
       return scheduleNotifer.onGetErrorMessage('Agendas de la cancha ${state.court.name} por dia alcanza el maximo de 3');
       
     }
+    
     scheduleNotifer.onGetErrorMessage('');
     final newDate = ScheduleDate.dirty(date);
     state = state.copyWith(
@@ -68,13 +69,7 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
       isValid: Formz.validate([ newDate, state.userName, state.initialTime ])
     );
 
-  final wheaterForescastDay = await dateWheaterCallback(state.date.value?? DateTime.now());
-  final alreadyWheater = wheaterForescastDay.any((element) => element.date == date);
-  if( alreadyWheater && wheaterForescastDay.isNotEmpty ){
-      state = state.copyWith(
-        forecast: wheaterForescastDay.firstWhere((element) => element.date == date).day
-      );
-  }
+    callDateWhaterCallback();
 
   }
 
@@ -87,8 +82,11 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
       if( time.hour < now.hour || (time.hour == now.hour && time.minute < now.minute) ){
       return scheduleNotifer.onGetErrorMessage('Elija una hora mayor a la actual');
       }
-      return scheduleNotifer.onGetErrorMessage('');
     }
+    for( int i = 0; i < timeExcludes.length; i++){
+      if( time.hour == timeExcludes[i] ) return scheduleNotifer.onGetErrorMessage('Elija una hora entre 7:00 AM y 9:00 PM');
+    }
+
     final newTime = ScheduleInitialTime.dirty(time);
     final newDate = ScheduleDate.dirty( DateTime(state.date.value!.year, state.date.value!.month, state.date.value!.day,
       newTime.value!.hour, newTime.value!.minute
@@ -98,10 +96,8 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
       date: newDate,
       isValid: Formz.validate([ newTime, state.userName, state.date])
     );
+      return scheduleNotifer.onGetErrorMessage('');
   }
-
-
-
 
   onEndTimeChanged( int value ){
     final newEndTime = ScheduleEndTime.dirty(value);
@@ -134,15 +130,13 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
    userName: state.userName.value,
    endDate: newEndDate);
 
-  final wheaterForescastDay = await dateWheaterCallback(state.date.value?? DateTime.now());
-  final alreadyWheater = wheaterForescastDay.any((element) => element.date == state.date.value);
-  if( alreadyWheater && wheaterForescastDay.isNotEmpty ){
-      state = state.copyWith(
-        forecast: wheaterForescastDay.firstWhere((element) => element.date == state.date.value).day
-      );
-  }
 
     await scheduleNotifer.createSchedule(newSchedule, state.court, state.forecast);
+    state = state.copyWith(
+      initialTime: null,
+      userName: const ScheduleUserName.pure()
+      
+    );
     
   }
 
@@ -163,11 +157,12 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
       isFormPosted: true
     );
     
+    
   }
 
 
   _validateFields(){
-    onDateChanged(state.date.value!);
+    onDateChanged(state.date.value?? DateTime.now());
     onCourtSelectChange(state.court);
   }
 
@@ -192,7 +187,21 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
     return false; 
   }
 
+  Future<void> callDateWhaterCallback() async {
+
+    final wheaterForescastDay = await dateWheaterCallback(state.date.value?? DateTime.now());
+  final alreadyWheater = wheaterForescastDay.any((element) => element.date == state.date.value);
+  if( alreadyWheater && wheaterForescastDay.isNotEmpty ){
+      state = state.copyWith(
+        forecast: wheaterForescastDay.firstWhere((element) => element.date == state.date.value).day
+      );
+  }
+
+  }
+
 }
+
+
 
 
 

@@ -75,7 +75,7 @@ class ScheduleListView extends ConsumerWidget {
                   Image.network('https:${schedule.icon}', width: 20,)
                   ],
                 ),
-                Text('Probabilidad de lluvia:  ${schedule.chanceOfRain}%')
+                Text('Probabilidad de lluvia:  ${schedule.chanceOfRain == null ? 'n/a' :'${schedule.chanceOfRain}%'}')
               ],
             ),
           ),

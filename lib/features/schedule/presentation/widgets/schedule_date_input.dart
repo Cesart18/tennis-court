@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:tennis_court/config/config.dart';
 import 'package:tennis_court/features/api/domain/domain.dart';
 import 'package:tennis_court/features/api/presentation/providers/date_wheater_provider.dart';
 import '../presentation.dart';
@@ -50,16 +49,8 @@ class ScheduleDateInput extends ConsumerWidget {
                 },
               ),
               if( dateWheaterState.isNotEmpty && alreadyWheater )
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(dateWheater.day.condition.text,
-                  style: const TextStyle(color: primaryColor),
-                  ),
-                  const SizedBox(width: 6,),
-                  Image.network('https:${dateWheater.day.condition.icon}', width: 20,)
-                ],
-              )
+              Text('Porcentaje de lluvia del dia: ${dateWheater.day.dailyChanceOfRain == null ? 'n/a':
+              '${dateWheater.day.dailyChanceOfRain}%'}')
       ],
     );
   }

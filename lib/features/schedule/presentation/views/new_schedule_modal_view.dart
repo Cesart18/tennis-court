@@ -22,7 +22,7 @@ class NewScheduleModalView extends ConsumerWidget {
 
     return SizedBox(
       width: 320,
-      height: 500,
+      height: 540,
       child: Column(
         children: [
           Text(

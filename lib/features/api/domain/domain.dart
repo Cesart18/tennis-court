@@ -6,6 +6,7 @@ export 'entities/wheare_forecast_day.dart';
 
 // models
 export 'models/wheate_api_response.dart';
+export 'models/whater_api_future_response.dart';
 
 // datasource
 export 'datasources/date_wheater_datasource.dart';

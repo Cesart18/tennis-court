@@ -32,6 +32,7 @@ class DateWheaterDatasourceImpl extends DateWheaterDatasource{
     });
     final apiResponse = WheaterApiResponse.fromJson(resp.data);
     final WheaterForecast dateWheater = WheaterMapper.wheaterApiReponseToEntity(apiResponse);
+    print('object');
     return dateWheater;
 
     } on DioException catch (e) {
@@ -51,8 +52,8 @@ class DateWheaterDatasourceImpl extends DateWheaterDatasource{
     final resp = await dio.get('/$queryFuture', queryParameters: {
         'dt': '${date.year}-${date.month}-${date.day}'
     });
-    final apiResponse = WheaterApiResponse.fromJson(resp.data);
-    final WheaterForecast dateWheater = WheaterMapper.wheaterApiReponseToEntity(apiResponse);
+    final apiResponse = FutureWheaterApiResponse.fromJson(resp.data);
+    final WheaterForecast dateWheater = FutureWheaterMapper.wheaterApiReponseToEntity(apiResponse);
     return dateWheater;
       
     } on DioException catch (e) {
@@ -61,7 +62,7 @@ class DateWheaterDatasourceImpl extends DateWheaterDatasource{
         }
         throw Exception();
     }catch (e){
-        throw Exception();
+        throw CustomError(message: 'Error no controlado');
     }
   }
 

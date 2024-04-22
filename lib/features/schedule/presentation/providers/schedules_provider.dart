@@ -21,7 +21,7 @@ class SchedulesNotifier extends StateNotifier<SchedulesState> {
 
   Future<void> createSchedule(Schedule schedule, Court court) async {
 
-  final schedulesOfCourt = state.schedules.where((element) => element.courts.contains(court)).toList();
+  final schedulesOfCourt = state.schedules.where((element) => element.court.value == court).toList();
 
   final schedulesByDay = schedulesOfCourt.where((element) => element.initialDate.day == schedule.initialDate.day).toList();
     
@@ -33,7 +33,6 @@ class SchedulesNotifier extends StateNotifier<SchedulesState> {
       throw CustomError(message: 'Agendas de la cancha ${court.name} por dia alcanza el maximo de 3');
     }
       await scheduleRepository.createSchedule(schedule, court);
-    schedule.courts.add(court);
     state = state.copyWith(
       schedules: [...state.schedules, schedule],
       errorMessage: ''

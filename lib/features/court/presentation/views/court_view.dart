@@ -20,7 +20,7 @@ class CourtView extends ConsumerWidget {
     final court = ref.watch(courtProvider(courtId)).court;
     final colors = Theme.of(context).colorScheme;
     final schedules = ref.watch(schedulesProvider).schedules;
-    final schedulesByCourt = sortSchedulesByDate(schedules.where(( schedule ) => schedule.courts.contains(court)).toList());
+    final schedulesByCourt = sortSchedulesByDate(schedules.where(( schedule ) => schedule.court.value?.id == court?.id).toList());
     return Scaffold(
       appBar: AppBar(
         title: Text('Cancha: ${court?.name ?? 'Cancha no encontrada'}'),

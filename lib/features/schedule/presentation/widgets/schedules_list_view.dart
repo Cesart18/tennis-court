@@ -58,7 +58,7 @@ class ScheduleListView extends ConsumerWidget {
             }, icon: const Icon(CupertinoIcons.trash_fill,)),
             title: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text('Cancha: ${schedule.courts.first.name}'),
+                Text('Cancha: ${schedule.court.value?.name}'),
                 Text('Usuario: ${schedule.userName}')
               ],
             ),

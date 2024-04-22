@@ -12,7 +12,7 @@ class Schedule {
   final DateTime endDate;
 
   @Backlink(to: 'schedules')
-  final courts = IsarLinks<Court>();
+  final court = IsarLink<Court>();
 
   final String userName;
 

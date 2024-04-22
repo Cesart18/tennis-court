@@ -17,7 +17,7 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
   Future<void> createSchedule( Schedule schedule,  Court court) async {
     final isar = await db;
     final newSchedule = schedule
-    ..courts.add(court);
+    ..court.value = court;
     
     final courtHasSchedule = await court.schedules.filter()
     .initialDateEqualTo(schedule.initialDate).findFirst();
@@ -25,8 +25,8 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
     final existingSchedules = await isar.schedules.where().filter()
     .initialDateLessThan(schedule.endDate)
     .endDateGreaterThan(schedule.initialDate)
-    .courts((q) => q.idEqualTo(court.id))
-    .findAll();
+    .court((q) => q.idEqualTo(court.id)).findAll();
+    
 
     if( existingSchedules.isNotEmpty ) throw CustomError(message: 'La cancha ${court.name} está ocupada en el rango de tiempo especificado');
 
@@ -35,7 +35,7 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
     try {
       await isar.writeTxn(() async{
       await isar.schedules.put(newSchedule);
-      await schedule.courts.save();
+      await schedule.court.save();
     });
     } on IsarError catch (e) {
       if(e.message == 'Unique index violated.'){

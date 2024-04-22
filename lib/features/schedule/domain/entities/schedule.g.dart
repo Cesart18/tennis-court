@@ -40,11 +40,11 @@ const ScheduleSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'courts': LinkSchema(
+    r'court': LinkSchema(
       id: -8783338300362110384,
-      name: r'courts',
+      name: r'court',
       target: r'Court',
-      single: false,
+      single: true,
       linkName: r'schedules',
     )
   },
@@ -114,12 +114,12 @@ Id _scheduleGetId(Schedule object) {
 }
 
 List<IsarLinkBase<dynamic>> _scheduleGetLinks(Schedule object) {
-  return [object.courts];
+  return [object.court];
 }
 
 void _scheduleAttach(IsarCollection<dynamic> col, Id id, Schedule object) {
   object.id = id;
-  object.courts.attach(col, col.isar.collection<Court>(), r'courts', id);
+  object.court.attach(col, col.isar.collection<Court>(), r'court', id);
 }
 
 extension ScheduleQueryWhereSort on QueryBuilder<Schedule, Schedule, QWhere> {
@@ -510,60 +510,16 @@ extension ScheduleQueryObject
 
 extension ScheduleQueryLinks
     on QueryBuilder<Schedule, Schedule, QFilterCondition> {
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courts(
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> court(
       FilterQuery<Court> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'courts');
+      return query.link(q, r'court');
     });
   }
 
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsLengthEqualTo(
-      int length) {
+  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'courts', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'courts', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'courts', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'courts', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition>
-      courtsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'courts', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Schedule, Schedule, QAfterFilterCondition> courtsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'courts', lower, includeLower, upper, includeUpper);
+      return query.linkLength(r'court', 0, true, 0, true);
     });
   }
 }

@@ -17,7 +17,7 @@ const timeExcludes = [0,1,2,3,4,5,6,22,23];
     if( isValid || isPure ) return null;
 
     if( displayError == ScheduleInitialTimeError.invalid ) return 'Hora requerida';
-    if( displayError == ScheduleInitialTimeError.isClosed ) return 'Horario no permitido';
+    if( displayError == ScheduleInitialTimeError.isClosed ) return 'Elija una hora entre 7:00 AM y 9:00 PM';
 
 
     return null;

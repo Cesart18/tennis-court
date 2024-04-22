@@ -8,8 +8,9 @@ Aplicacion para administrar las reservas de tres canchas de tennis
 flutter pub get
  ```
 
-- Revisar template .env
-- API utilizada : [wheater api](https://www.weatherapi.com/)
+1. Revisar template .env
+2. API utilizada : [wheater api](https://www.weatherapi.com/)
+3. Crear apikey
 
 ### Paquetes de terceros usados
 

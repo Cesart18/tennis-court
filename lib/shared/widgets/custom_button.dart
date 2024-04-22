@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tennis_court/shared/shared.dart';
+import 'package:tennis_court/config/constants/constants.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;

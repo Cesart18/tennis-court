@@ -27,7 +27,7 @@ class DateWheaterDatasourceImpl extends DateWheaterDatasource{
     try {
     final response = await dio.get('/$queryForecast',
     queryParameters: {
-      'days': days
+      'days': 1
     });
     final apiResponse = WheaterApiResponse.fromJson(response.data);
     final DateWheater dateWheater = WheaterMapper.wheaterApiReponseToEntity(apiResponse);
@@ -38,8 +38,6 @@ class DateWheaterDatasourceImpl extends DateWheaterDatasource{
         throw CustomError(message: 'Error en la solicitud del clima');
         }
         throw Exception();
-    }catch (e){
-      throw CustomError(message: 'Error no controlado');
     }
 
   }

@@ -16,7 +16,7 @@ class DateWheaterNotifier extends StateNotifier<DateWheaterState> {
     required this.dateWheaterRepository
   }): super(DateWheaterState());
   
-  Future<void> getWheaterByDate( DateTime date ) async {
+  Future<DateWheater> getWheaterByDate( DateTime date ) async {
 
     final diference = DateTime.now().difference(date).inDays;
 
@@ -27,7 +27,7 @@ class DateWheaterNotifier extends StateNotifier<DateWheaterState> {
     state = state.copyWith(
       dateWheater: dateWheater
     );
-
+    return dateWheater;
   }
 
 

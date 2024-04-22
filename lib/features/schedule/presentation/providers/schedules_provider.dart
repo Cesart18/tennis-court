@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tennis_court/features/api/domain/domain.dart';
 import 'package:tennis_court/features/court/domain/entities/court.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
 import 'package:tennis_court/features/schedule/infrastructure/infrastructure.dart';
@@ -19,7 +20,7 @@ class SchedulesNotifier extends StateNotifier<SchedulesState> {
 
   
 
-  Future<void> createSchedule(Schedule schedule, Court court) async {
+  Future<void> createSchedule(Schedule schedule, Court court, [ ForecastDay? wheater ]) async {
 
   final schedulesOfCourt = state.schedules.where((element) => element.court.value == court).toList();
 
@@ -32,7 +33,7 @@ class SchedulesNotifier extends StateNotifier<SchedulesState> {
       onGetErrorMessage('Agendas de la cancha ${court.name} por dia alcanza el maximo de 3');
       throw CustomError(message: 'Agendas de la cancha ${court.name} por dia alcanza el maximo de 3');
     }
-      await scheduleRepository.createSchedule(schedule, court);
+      await scheduleRepository.createSchedule(schedule, court, wheater);
     state = state.copyWith(
       schedules: [...state.schedules, schedule],
       errorMessage: ''

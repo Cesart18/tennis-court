@@ -1,6 +1,7 @@
 
 
 import 'package:isar/isar.dart';
+import 'package:tennis_court/features/api/domain/entities/forecast_day.dart';
 import 'package:tennis_court/features/court/domain/domain.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
 import 'package:tennis_court/features/schedule/infrastructure/infrastructure.dart';
@@ -14,10 +15,17 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
   }
 
   @override
-  Future<void> createSchedule( Schedule schedule,  Court court) async {
+  Future<void> createSchedule(Schedule schedule, Court court, [ForecastDay? wheater]) async {
     final isar = await db;
     final newSchedule = schedule
     ..court.value = court;
+
+    if( wheater != null ){
+      newSchedule..chanceOfRain = wheater.dailyChanceOfRain
+      ..willItRain = wheater.dailyWillItRain
+      ..conditionText = wheater.condition.text
+      ..icon = wheater.condition.icon;
+    }
     
     final courtHasSchedule = await court.schedules.filter()
     .initialDateEqualTo(schedule.initialDate).findFirst();
@@ -43,8 +51,8 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
       }
       
     }
-    
   }
+  
 
   @override
   Future<void> deleteSchedule(Schedule schedule) async {
@@ -63,9 +71,5 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
     return Future.value(schedules);
   }
 
-  
-  
-  
-  
 
 }

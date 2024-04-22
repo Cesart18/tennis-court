@@ -2,7 +2,6 @@
 export 'entities/date_wheater.dart';
 export 'entities/wheater_condition.dart';
 export 'entities/forecast_day.dart';
-export 'entities/forecast_hour.dart';
 
 
 // models

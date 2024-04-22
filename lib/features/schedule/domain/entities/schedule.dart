@@ -15,12 +15,15 @@ class Schedule {
   final court = IsarLink<Court>();
 
   final String userName;
-
+  late int? willItRain;
+  late int? chanceOfRain;
+  late String? conditionText;
+  late String? icon;
 
 
   Schedule({
       required this.initialDate,
       required this.userName,
-      required this.endDate
+      required this.endDate,
       });
 }

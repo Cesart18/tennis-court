@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
+import 'package:tennis_court/features/api/domain/domain.dart';
 import 'package:tennis_court/features/api/presentation/providers/date_wheater_provider.dart';
 import 'package:tennis_court/features/court/domain/domain.dart';
 import 'package:tennis_court/features/court/presentation/presentation.dart';
@@ -20,7 +21,7 @@ final scheduleFormProvider = StateNotifierProvider.autoDispose<ScheduleFormNotif
 
 class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
   final SchedulesNotifier scheduleNotifer;
-  final Future<void>Function( DateTime ) dateWheaterCallback;
+  final Future<DateWheater>Function( DateTime ) dateWheaterCallback;
   ScheduleFormNotifier({
     required Court court,
     required this.scheduleNotifer,
@@ -60,11 +61,12 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
       return scheduleNotifer.onGetErrorMessage('Agendas de la cancha ${state.court.name} por dia alcanza el maximo de 3');
       
     }
-    await dateWheaterCallback( date );
+  final wheater = await dateWheaterCallback(date);
     scheduleNotifer.onGetErrorMessage('');
     final newDate = ScheduleDate.dirty(date);
     state = state.copyWith(
       date: newDate,
+      forecast: wheater.forecastDay,
       isValid: Formz.validate([ newDate, state.userName, state.initialTime ])
     );
   }
@@ -117,22 +119,16 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
       state.date.value!.minute
     );
 
-  
-
-  // if( hasConlicts ) return scheduleNotifer.onGetErrorMessage('La cancha está ocupada en el rango de tiempo especificado');
     if( !state.isValid) return;
-
-
-   
-
-  
 
   final newSchedule = Schedule(
     initialDate: state.date.value!,
    userName: state.userName.value,
    endDate: newEndDate);
 
-    await scheduleNotifer.createSchedule(newSchedule, state.court);
+    
+
+    await scheduleNotifer.createSchedule(newSchedule, state.court, state.forecast);
   }
 
 
@@ -192,6 +188,7 @@ class ScheduleFormState {
     final ScheduleDate date;
     final ScheduleInitialTime initialTime;
     final ScheduleEndTime endTime;
+    final ForecastDay? forecast;
     final bool isFormPosted;
     final bool isValid;
 
@@ -204,6 +201,7 @@ class ScheduleFormState {
      required this.initialTime,
      this.isFormPosted = false, 
      this.isValid = false,
+     this.forecast
      });
 
   ScheduleFormState copyWith({
@@ -214,6 +212,7 @@ class ScheduleFormState {
     ScheduleInitialTime? initialTime,
     bool? isFormPosted,
     bool? isValid,
+    ForecastDay? forecast,
   }) => ScheduleFormState(
     userName: userName ?? this.userName,
     court: court ?? this.court,
@@ -222,6 +221,7 @@ class ScheduleFormState {
     initialTime: initialTime ?? this.initialTime,
     isFormPosted: isFormPosted ?? this.isFormPosted,
     isValid: isValid ?? this.isValid,
+    forecast: forecast ?? this.forecast
   );
 
   }

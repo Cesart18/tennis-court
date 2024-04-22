@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:tennis_court/features/court/domain/domain.dart';
 import '../presentation.dart';
 
@@ -49,69 +48,20 @@ class NewScheduleModalView extends ConsumerWidget {
           const SizedBox(
             height: 10,
           ),
-          CustomFormField(
-            keyboardType: TextInputType.name,
-            labelText: DateFormat('EEEE dd-MM ', Intl.getCurrentLocale())
-                .format(scheduleForm.date.value!),
-            length: 20,
-            prefixIcon: const Icon(CupertinoIcons.calendar),
-            readOnly: true,
-            onFieldSubmitted: (_) =>
-                ref.read(scheduleFormProvider.notifier).onFormSubmit(),
-            errorText: scheduleForm.isFormPosted
-                ? scheduleForm.date.errorMessage
-                : null,
-            onTap: () async {
-              final DateTime? pickedDate = await showDatePicker(
-                  helpText: 'Seleccione una fecha',
-                  errorFormatText: scheduleForm.date.errorMessage,
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(2025));
-              if (pickedDate != null && pickedDate != DateTime.now()) {
-                ref
-                    .read(scheduleFormProvider.notifier)
-                    .onDateChanged(pickedDate);
-              }
-            },
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          CustomFormField(
-            keyboardType: TextInputType.name,
-            labelText: DateFormat('hh:mm a').format(scheduleForm.date.value!),
-            length: 20,
-            prefixIcon: const Icon(CupertinoIcons.clock),
-            readOnly: true,
-            onFieldSubmitted: (_) =>
-                ref.read(scheduleFormProvider.notifier).onFormSubmit(),
-            errorText: scheduleForm.isFormPosted
-                ? scheduleForm.initialTime.errorMessage
-                : null,
-            onTap: () async {
-              final TimeOfDay? pickedTime = await showTimePicker(
-                context: context,
-                initialTime: scheduleForm.initialTime.value ?? TimeOfDay.now(),
-              );
-              if (pickedTime != null && pickedTime != TimeOfDay.now()) {
-                ref
-                    .read(scheduleFormProvider.notifier)
-                    .onInitialTimeChanged(pickedTime);
-              }
-            },
-          ),
-          const SizedBox(
-            height: 10,
-          ),
+          const ScheduleDateInput(),
+
+          const SizedBox(height: 10),
+
+          const ScheduleTimeInput(),
+
+          const SizedBox(height: 10),
+
           const TimeDropDownMenuButton(),
-          const SizedBox(
-            height: 10,
-          ),
-          CourtsDropDownMenuButton(
-            courts: courts,
-          ),
+
+          const SizedBox(height: 20),
+
+          CourtsDropDownMenuButton(courts: courts,)
+          ,
           if (scheduleState.errorMessage.length > 2)
             const SizedBox(
               height: 30,

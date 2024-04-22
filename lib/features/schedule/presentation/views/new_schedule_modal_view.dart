@@ -58,7 +58,9 @@ class NewScheduleModalView extends ConsumerWidget {
              errorText:  scheduleForm.isFormPosted ? scheduleForm.date.errorMessage : null, 
              onTap: () async {
                 final DateTime? pickedDate = await showDatePicker(
+                  helpText: 'Seleccione una fecha',
                 errorFormatText: scheduleForm.date.errorMessage ,
+                locale: const Locale('es'),
                 context: context, 
                 initialDate: DateTime.now(),
                 firstDate: DateTime.now(),
@@ -83,6 +85,9 @@ class NewScheduleModalView extends ConsumerWidget {
              onTap: () async {
               final TimeOfDay? pickedTime = await showTimePicker(
                 context: context,
+                helpText: 'Seleccione una hora',
+                hourLabelText: 'Hora',
+                minuteLabelText: 'Minuto',
                initialTime: TimeOfDay.now());
                if( pickedTime != null && pickedTime != TimeOfDay.now() ){
                 ref.read(scheduleFormProvider.notifier).onInitialTimeChanged(pickedTime);

@@ -8,7 +8,6 @@ class CustomActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: falta implementacion de las funciones
     final colors = Theme.of(context).colorScheme;
     return FilledButton(
       onPressed: onPressed,

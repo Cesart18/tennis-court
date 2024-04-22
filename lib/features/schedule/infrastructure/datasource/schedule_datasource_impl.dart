@@ -22,6 +22,14 @@ class ScheduleDatasourceImpl extends ScheduleDatasource{
     final courtHasSchedule = await court.schedules.filter()
     .initialDateEqualTo(schedule.initialDate).findFirst();
 
+    final existingSchedules = await isar.schedules.where().filter()
+    .initialDateLessThan(schedule.endDate)
+    .endDateGreaterThan(schedule.initialDate)
+    .courts((q) => q.idEqualTo(court.id))
+    .findAll();
+
+    if( existingSchedules.isNotEmpty ) throw CustomError(message: 'La cancha ${court.name} está ocupada en el rango de tiempo especificado');
+
     if( courtHasSchedule != null) throw CustomError(message: 'Horario para esta cancha no disponible');
 
     try {

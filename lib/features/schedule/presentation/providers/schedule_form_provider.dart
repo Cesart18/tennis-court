@@ -66,6 +66,12 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
 
 
   onInitialTimeChanged( TimeOfDay time ){
+    final now = DateTime.now();
+    if( state.date.value!.day == DateTime.now().day && state.date.value!.month == DateTime.now().month ){
+      if( time.hour < now.hour || (time.hour == now.hour && time.minute < now.minute) ){
+      return scheduleNotifer.onGetErrorMessage('Elija una hora mayor a la actual');
+      }
+    }
     final newTime = ScheduleInitialTime.dirty(time);
     final newDate = ScheduleDate.dirty( DateTime(state.date.value!.year, state.date.value!.month, state.date.value!.day,
       newTime.value!.hour, newTime.value!.minute
@@ -95,10 +101,8 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
   onFormSubmit() async {
     _touchEveryField();
     _validateFields();
-  
-    if( !state.isValid ) return;
 
-    final newEndDate = DateTime(
+     final newEndDate = DateTime(
       state.date.value!.year,
       state.date.value!.month,
       state.date.value!.day,
@@ -106,6 +110,15 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
       state.date.value!.minute
     );
 
+  
+
+  // if( hasConlicts ) return scheduleNotifer.onGetErrorMessage('La cancha está ocupada en el rango de tiempo especificado');
+    if( !state.isValid) return;
+
+
+   
+
+  
 
   final newSchedule = Schedule(
     initialDate: state.date.value!,
@@ -138,6 +151,27 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
   _validateFields(){
     onDateChanged(state.date.value!);
     onCourtSelectChange(state.court);
+  }
+
+  bool hasConflictingSchedules() {
+    final endDate = DateTime(
+      state.date.value!.year,
+      state.date.value!.month,
+      state.date.value!.day,
+      (state.date.value!.hour + state.endTime.value),
+      state.date.value!.minute
+    );
+    for (final existingSchedule in state.court.schedules) {
+      final existingStartDateTime = existingSchedule.initialDate;
+      final existingEndDateTime = existingSchedule.endDate;
+
+      if (state.date.value!.isBefore(existingEndDateTime) &&
+          endDate.isAfter(existingStartDateTime)) {
+        return true; 
+      }
+    }
+
+    return false; 
   }
 
 }

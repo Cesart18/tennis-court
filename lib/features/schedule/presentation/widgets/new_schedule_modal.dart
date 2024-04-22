@@ -12,6 +12,7 @@ class NewScheduleModal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isValid = ref.watch(scheduleFormProvider).isValid;
     final errorMessage = ref.watch(schedulesProvider).errorMessage;
+    
     return AlertDialog(
       elevation: 0,
       content:  NewScheduleModalView(courts: courts,),
@@ -31,8 +32,9 @@ class NewScheduleModal extends ConsumerWidget {
         CustomActionButton(
           text: 'Aceptar',
            onPressed: (){
+            final hasConlicts = ref.read(scheduleFormProvider.notifier).hasConflictingSchedules();
            ref.watch(scheduleFormProvider.notifier).onFormSubmit();
-           if( !isValid || errorMessage.length > 2) return;
+           if( !isValid || errorMessage.length > 2 || hasConlicts) return;
            context.pop();
            }),
 

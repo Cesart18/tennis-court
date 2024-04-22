@@ -19,6 +19,7 @@ const timeExcludes = [0,1,2,3,4,5,6,22,23];
     if( displayError == ScheduleInitialTimeError.invalid ) return 'Hora requerida';
     if( displayError == ScheduleInitialTimeError.isClosed ) return 'Horario no permitido';
 
+
     return null;
   }
 
@@ -29,6 +30,7 @@ const timeExcludes = [0,1,2,3,4,5,6,22,23];
     for( int i = 0; i < timeExcludes.length; i++){
       if( value.hour == timeExcludes[i] ) return ScheduleInitialTimeError.isClosed;
     }
+
     return null;
   }
 

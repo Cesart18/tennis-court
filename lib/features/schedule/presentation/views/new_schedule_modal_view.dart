@@ -111,7 +111,8 @@ class NewScheduleModalView extends ConsumerWidget {
         Center(
           child: Text(
             scheduleState.errorMessage,
-            style: TextStyle(color: Colors.red),
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.red),
           ),
         ),
         ],

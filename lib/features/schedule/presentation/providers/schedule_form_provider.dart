@@ -6,26 +6,36 @@ import 'package:tennis_court/features/court/presentation/presentation.dart';
 import 'package:tennis_court/features/schedule/domain/domain.dart';
 import 'package:tennis_court/features/schedule/presentation/presentation.dart';
 
-final scheduleFormProvider = StateNotifierProvider<ScheduleFormNotifier, ScheduleFormState>((ref) {
+final scheduleFormProvider = StateNotifierProvider.autoDispose<ScheduleFormNotifier, ScheduleFormState>((ref) {
   final courst = ref.watch(courtsProvider).courts;
-  final scheduleCallback = ref.watch(schedulesProvider.notifier).createSchedule;
+  final scheduleNotifer = ref.watch(schedulesProvider.notifier);
   return ScheduleFormNotifier(court: courst[0],
-  scheduleCallback: scheduleCallback );
+  scheduleNotifer: scheduleNotifer );
 });
 
 
 class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
-  final Function( Schedule, Court ) scheduleCallback;
+  final SchedulesNotifier scheduleNotifer;
   ScheduleFormNotifier({
     required Court court,
-    required this.scheduleCallback,
+    required this.scheduleNotifer,
   }): super(ScheduleFormState(court: court, date: ScheduleDate.dirty(DateTime.now()), initialTime: ScheduleInitialTime.dirty(TimeOfDay.now())  ) );
 
+
+
   onCourtSelectChange( Court court ){
+    final schedulesOfCourt = court.schedules.toList().where((e) => e.initialDate.day == state.date.value?.day).toList();
+    if( schedulesOfCourt.length > 2  ) {
+      return scheduleNotifer.onGetErrorMessage('Agendas de la cancha ${court.name} por dia alcanza el maximo de 3');
+    }
+    scheduleNotifer.onGetErrorMessage('');
     state = state.copyWith(
       court: court,
     );
   }
+
+
+
 
   onUserNameChanged( String name ){
     final newName = ScheduleUserName.dirty(name);
@@ -35,13 +45,25 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
     );
   }
 
+
+
+
   onDateChanged( DateTime date ){
+    final schedulesOfCourt = state.court.schedules.toList().where((e) => e.initialDate.day == date.day).toList();
+    if( schedulesOfCourt.length > 2  ) {
+      return scheduleNotifer.onGetErrorMessage('Agendas de la cancha ${state.court.name} por dia alcanza el maximo de 3');
+      
+    }
+    scheduleNotifer.onGetErrorMessage('');
     final newDate = ScheduleDate.dirty(date);
     state = state.copyWith(
       date: newDate,
       isValid: Formz.validate([ newDate, state.userName, state.initialTime ])
     );
   }
+
+
+
 
   onInitialTimeChanged( TimeOfDay time ){
     final newTime = ScheduleInitialTime.dirty(time);
@@ -55,6 +77,9 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
     );
   }
 
+
+
+
   onEndTimeChanged( int value ){
     final newEndTime = ScheduleEndTime.dirty(value);
     state = state.copyWith(
@@ -64,8 +89,12 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
 
   }
 
+
+
+
   onFormSubmit() async {
     _touchEveryField();
+    _validateFields();
   
     if( !state.isValid ) return;
 
@@ -83,8 +112,11 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
    userName: state.userName.value,
    endDate: newEndDate);
 
-    await scheduleCallback(newSchedule, state.court);
+    await scheduleNotifer.createSchedule(newSchedule, state.court);
   }
+
+
+
 
   _touchEveryField(){
     final userName = ScheduleUserName.dirty(state.userName.value);
@@ -100,6 +132,12 @@ class ScheduleFormNotifier extends StateNotifier<ScheduleFormState> {
       isFormPosted: true
     );
     
+  }
+
+
+  _validateFields(){
+    onDateChanged(state.date.value!);
+    onCourtSelectChange(state.court);
   }
 
 }

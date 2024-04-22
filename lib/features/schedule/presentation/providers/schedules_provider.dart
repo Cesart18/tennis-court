@@ -28,7 +28,10 @@ class SchedulesNotifier extends StateNotifier<SchedulesState> {
 
 
   try {
-    if( schedulesByDay.length > 2 ) throw CustomError(message: 'Agendas de la cancha ${court.name} por dia alcanza el maximo de 3');
+    if( schedulesByDay.length > 2 ) {
+      onGetErrorMessage('Agendas de la cancha ${court.name} por dia alcanza el maximo de 3');
+      throw CustomError(message: 'Agendas de la cancha ${court.name} por dia alcanza el maximo de 3');
+    }
       await scheduleRepository.createSchedule(schedule, court);
     schedule.courts.add(court);
     state = state.copyWith(
@@ -55,7 +58,7 @@ Future<void> loadSchedules() async {
   );
 }
 
-void onGetErrorMessage([ String? errorMessage ]){
+Future<void> onGetErrorMessage([ String? errorMessage ]) async {
   if (state.errorMessage == errorMessage) return;
     state = state.copyWith(
       errorMessage: errorMessage

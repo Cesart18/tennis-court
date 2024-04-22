@@ -11,6 +11,7 @@ class NewScheduleModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isValid = ref.watch(scheduleFormProvider).isValid;
+    final errorMessage = ref.watch(schedulesProvider).errorMessage;
     return AlertDialog(
       elevation: 0,
       content:  NewScheduleModalView(courts: courts,),
@@ -31,7 +32,7 @@ class NewScheduleModal extends ConsumerWidget {
           text: 'Aceptar',
            onPressed: (){
            ref.watch(scheduleFormProvider.notifier).onFormSubmit();
-           if( !isValid ) return;
+           if( !isValid || errorMessage.length > 2) return;
            context.pop();
            }),
 

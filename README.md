@@ -1,16 +1,28 @@
-# tennis_court
+# Tennis Court
 
-A new Flutter project.
+Aplicacion para administrar las reservas de tres canchas de tennis
 
-## Getting Started
+## Inicio
 
-This project is a starting point for a Flutter application.
+```
+flutter pub get
+ ```
 
-A few resources to get you started if this is your first Flutter project:
+1. Revisar template .env
+2. API utilizada : [wheater api](https://www.weatherapi.com/)
+3. Crear apikey
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Paquetes de terceros usados
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- flutter_riverpod: ^2.5.1
+- flutter_svg: ^2.0.10+1
+- formz: ^0.7.0
+- go_router: ^13.2.4
+- google_fonts: ^6.2.1
+- intl: ^0.18.0
+- isar: ^3.1.0+1
+- isar_flutter_libs: ^3.1.0+1
+- path_provider: ^2.1.3
+- dio: ^5.4.3+1
+- flutter_dotenv: ^5.1.0
+

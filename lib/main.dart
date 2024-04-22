@@ -6,7 +6,8 @@ import 'package:tennis_court/config/config.dart';
 import 'package:tennis_court/shared/shared.dart';
 
 
-void main() {
+void main() async {
+  await Environment.initEnvironment();
   Intl.defaultLocale = 'es_MX';
   runApp(const ProviderScope(child: MyApp()));
 }

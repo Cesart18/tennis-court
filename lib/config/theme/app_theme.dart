@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tennis_court/shared/shared.dart';
+import '../config.dart';
 
 class AppTheme {
   final bool isDarkMode;

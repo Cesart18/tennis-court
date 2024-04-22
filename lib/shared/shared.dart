@@ -1,5 +1,3 @@
-// constants
-export 'constants/constants.dart';
 
 // providers
 export 'providers/app_theme_provider.dart';
